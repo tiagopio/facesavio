@@ -13,6 +13,7 @@ model User {
   email     String   @unique
   username  String   @unique
   imageUrl  String?
+  bio       String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
