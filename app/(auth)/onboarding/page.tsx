@@ -1,18 +1,18 @@
 import AccountProfile from "@/components/forms/AccountProfile";
 import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
-async function Page() {
+export async function Page() {
   const user = await currentUser();
-  
-  const userInfo = {};
+  if (!user || user?.privateMetadata?.onboarding === "complete") {
+    return redirect("/");
+  }
 
-  const userData = {
-    id: user?.id,
-    objectId: userInfo?._id,
-    username: userInfo?.username || user?.username,
-    name: userInfo?.name || user?.firstName || "",
-    bio: userInfo?.bio || "",
-    image: userInfo?.image || user?.imageUrl,
+  const initialData = {
+    id: user.id,
+    username: user.username,
+    name: user.firstName || user.fullName,
+    image: user.imageUrl
   }
 
   return (
@@ -25,7 +25,7 @@ async function Page() {
 
       <section className="mt-9 bg-dark-2 p-10">
         <AccountProfile 
-          user={userData}
+          user={initialData}
           btnTitle="Continue"
         />
       </section>

@@ -10,10 +10,10 @@ datasource db {
 model User {
   id        String   @id @default(cuid())
   clerkId   String   @unique
-  email     String   @unique
   username  String   @unique
+  name      String
   imageUrl  String?
-  bio       String
+  bio       String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

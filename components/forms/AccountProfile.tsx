@@ -20,14 +20,17 @@ import { ChangeEvent, useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { isBase64Image } from "@/lib/utils";
 import { useUploadThing } from '@/lib/uploadthing' 
+import { onboard } from "./action";
+import { toast } from "sonner";
+import { redirect, useRouter } from "next/navigation";
+import { Loader } from "lucide-react";
+import { Toaster } from "../ui/sonner";
 
 interface Props {
   user: {
     id: string;
-    objectId: string;
-    username: string;
-    name: string;
-    bio: string;
+    username: string | null;
+    name: string | null;
     image: string;
   }
   btnTitle: string;
@@ -36,6 +39,8 @@ interface Props {
 const AccountProfile = ({user, btnTitle} : Props) => {
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing("media");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter()
 
   const form = useForm({
     resolver: zodResolver(UserValidation),
@@ -43,7 +48,7 @@ const AccountProfile = ({user, btnTitle} : Props) => {
       profile_photo: user?.image || "",
       name: user?.name || "",
       username: user?.username || "",
-      bio: user?.bio || ""
+      bio: ""
     }
   });
 
@@ -70,6 +75,7 @@ const AccountProfile = ({user, btnTitle} : Props) => {
   }
 
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
+    setLoading(true);
     const blob = values.profile_photo;
 
     const hasImageChanged = isBase64Image(blob);
@@ -81,12 +87,26 @@ const AccountProfile = ({user, btnTitle} : Props) => {
         values.profile_photo = imgRes[0].url;
       }
     }
+
+    const { message, error } = await onboard(values);
+    if (error) {
+      toast.error(message);
+      setLoading(false);
+      return;
+    }
+
+    toast.success(message, {
+      description: "Redirecionando..."
+    });
+
+    router.push('/');
   }
 
   return (
     <Form {...form}>
       <form 
-        onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col justify-start gap-10"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col justify-start gap-10"
       >
         <FormField
           control={form.control}
@@ -123,6 +143,7 @@ const AccountProfile = ({user, btnTitle} : Props) => {
                   onChange={(e) => handleImage(e, field.onChange)}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -143,6 +164,7 @@ const AccountProfile = ({user, btnTitle} : Props) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -163,6 +185,7 @@ const AccountProfile = ({user, btnTitle} : Props) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -183,11 +206,15 @@ const AccountProfile = ({user, btnTitle} : Props) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="bg-primary-500">Submit</Button>
+        <Button type="submit" className="bg-primary-500 flex gap-2" disabled={loading}>
+          {loading && <Loader className="animate-spin" />}
+          Submit
+        </Button>
       </form>
     </Form>
   )
