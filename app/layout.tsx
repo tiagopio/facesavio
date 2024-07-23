@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={inter.className}>
-        <TooltipProvider>
+        <TooltipProvider delayDuration={0}>
             {children}
         </TooltipProvider>
         <Toaster />

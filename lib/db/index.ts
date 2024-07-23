@@ -4,3 +4,4 @@ const db = new PrismaClient();
 
 export { db }
 export * from "./server"
+export * from "./actions"

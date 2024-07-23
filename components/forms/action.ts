@@ -4,12 +4,9 @@ import { UserValidation } from "@/lib/validations/user"
 import { z } from "zod"
 import { db } from "@/lib/db"
 import { clerkClient, currentUser } from "@clerk/nextjs/server"
+import { ActionResponse } from "@/types"
 
 type User = z.infer<typeof UserValidation>
-type ActionResponse = {
-    error: boolean,
-    message: string
-}
 export async function onboard(user: User): Promise<ActionResponse> {
     const { success, error, data } = UserValidation.safeParse(user);
     const u = await currentUser();

@@ -3,11 +3,10 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 export async function Page() {
-  const user = await currentUser();
-  if (!user || user?.privateMetadata?.onboarding === "complete") {
-    return redirect("/");
-  }
-
+  const user = await currentUser()
+  if (!user)
+    redirect("/sign-in")
+  
   const initialData = {
     id: user.id,
     username: user.username,
