@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { redirect, useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 import { Toaster } from "../ui/sonner";
+import { useUser } from "@clerk/nextjs";
 
 interface Props {
   user: {
@@ -41,6 +42,7 @@ const AccountProfile = ({user, btnTitle} : Props) => {
   const { startUpload } = useUploadThing("media");
   const [loading, setLoading] = useState(false);
   const router = useRouter()
+  const { user: clerkUser } = useUser();
 
   const form = useForm({
     resolver: zodResolver(UserValidation),
@@ -89,6 +91,7 @@ const AccountProfile = ({user, btnTitle} : Props) => {
     }
 
     const { message, error } = await onboard(values);
+    console.log(await clerkUser?.reload());
     if (error) {
       toast.error(message);
       setLoading(false);

@@ -61,8 +61,8 @@ export async function onboard(user: User): Promise<ActionResponse> {
     }
 
     await clerkClient().users.updateUser(u.id, {
-        privateMetadata: {
-            onboarding: "complete"
+        publicMetadata: {
+            onboardingComplete: true
         }
     });
 

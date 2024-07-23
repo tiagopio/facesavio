@@ -2,11 +2,12 @@ import ProfileHeader from "@/components/shared/ProfileHeader";
 import { fetchUser } from "@/lib/db/server";
 import { currentUser } from "@clerk/nextjs/server"
 
-export default async function Page({ params }: { params: { username: string } }) {
+export default async function Page({ params: { username } }: { params: { username: string } }) {
 
   const user = await currentUser();
+  const userInfo = await fetchUser(username);
 
-  if (!user || !user.username) {
+  if (!user || !user.username || !userInfo) {
     return (
       <section className="text-white">
         User not found.
@@ -14,17 +15,16 @@ export default async function Page({ params }: { params: { username: string } })
     );
   }
 
-  const userInfo = await fetchUser(params?.username);
   
   return (
     <section className="text-white">
       <ProfileHeader 
-        accountUsername={userInfo?.username}
-        authUserUsername={user.username}
-        name={userInfo?.username}
-        username={userInfo?.username}
-        imageUrl={userInfo?.imageUrl}
-        bio={userInfo?.bio}
+        authUserId={user.id}
+        accountId={"123"}
+        name={userInfo.username}
+        username={userInfo.username}
+        imageUrl={userInfo.imageUrl ?? ""}
+        bio={userInfo.bio ?? ""}
       />
     </section>
   )

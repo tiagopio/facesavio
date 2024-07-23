@@ -5,11 +5,6 @@ import { redirect } from "next/navigation";
 import { clerkClient } from "@clerk/nextjs/server";
 
 export default async function Home() {
-  const user = await currentUser();
-  if (user?.privateMetadata?.onboarding !== "complete") {
-    return redirect("/onboarding");
-  }
-
   return (
     <div className="text-light-1">
       <div className="flex gap-2  items-center">
