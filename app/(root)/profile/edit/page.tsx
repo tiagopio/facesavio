@@ -1,23 +1,22 @@
-"use server"
-
 import { currentUser } from "@clerk/nextjs/server";
 
-import { fetchUser } from "@/lib/db/server";
+import { fetchUser, getUserByClerkId } from "@/lib/db/server";
 import AccountProfile from "@/components/forms/AccountProfile";
 
-async function Page() {
+export async function Page() {
   const user = await currentUser();
   if (!user) return null;
 
-  const userInfo = await fetchUser(user.id);
+  const userInfo = await getUserByClerkId({ clerkId: user.id });
+  if (!userInfo) return null;
 
   const userData = {
     id: user.id,
-    objectId: userInfo?.id,
-    username: userInfo ? userInfo?.username : user.username,
-    name: userInfo ? userInfo?.name : user.firstName ?? "",
-    bio: userInfo ? userInfo?.bio : "",
-    image: userInfo ? userInfo?.imageUrl : user.imageUrl,
+    objectId: userInfo.id,
+    username: user.username ?? userInfo.username,
+    name: userInfo.name ?? user.firstName ?? "",
+    bio: userInfo.bio,
+    image: userInfo.imageUrl || user.imageUrl,
   };
 
   return (

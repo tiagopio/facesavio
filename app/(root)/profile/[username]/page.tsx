@@ -14,13 +14,12 @@ export default async function Page({ params: { username } }: { params: { usernam
       </section>
     );
   }
-
   
   return (
     <section className="text-white">
       <ProfileHeader 
         authUserId={user.id}
-        accountId={"123"}
+        accountId={userInfo.clerkId}
         name={userInfo.username}
         username={userInfo.username}
         imageUrl={userInfo.imageUrl ?? ""}
