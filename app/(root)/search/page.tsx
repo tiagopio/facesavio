@@ -8,7 +8,7 @@ export default async function Page() {
 
     return (
         <div className="flex flex-col gap-5">
-            <div className="flex gap-2 flex-col items-center text-light-1">
+            <div className="flex gap-2 flex-col items-center text-main-text">
                 <h1 className="text-heading1-bold">Buscar</h1>
                 <Input placeholder="Buscar" />
             </div>

@@ -34,7 +34,7 @@ function ProfileHeader({
           </div>
 
           <div className='flex-1'>
-            <h2 className='text-left text-heading3-bold text-light-1'>
+            <h2 className='text-left text-heading3-bold text-main-text'>
               {name}
             </h2>
             <p className='text-base-medium text-gray-1'>@{username}</p>
@@ -42,7 +42,7 @@ function ProfileHeader({
         </div>
         {accountId === authUserId && type !== "Community" && (
           <Link href='/profile/edit'>
-            <div className='flex cursor-pointer gap-3 rounded-lg bg-dark-3 px-4 py-2'>
+            <div className='flex cursor-pointer gap-3 rounded-lg bg-dark-4 px-4 py-2'>
               <Image
                 src='/assets/edit.svg'
                 alt='logout'
@@ -56,9 +56,9 @@ function ProfileHeader({
         )}
       </div>
 
-      <p className='mt-6 max-w-lg text-base-regular text-light-2'>{bio}</p>
+      <p className='mt-11 ml-7 max-w-lg text-base-regular text-main-text'>{bio}</p>
 
-      <div className='mt-12 h-0.5 w-full bg-dark-3' />
+      <div className='mt-12 h-0.5 w-full bg-gray-300' />
     </div>
   );
 }

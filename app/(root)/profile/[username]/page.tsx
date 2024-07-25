@@ -9,14 +9,14 @@ export default async function Page({ params: { username } }: { params: { usernam
 
   if (!user || !user.username || !userInfo) {
     return (
-      <section className="text-white">
+      <section className="text-main-text">
         User not found.
       </section>
     );
   }
   
   return (
-    <section className="text-white">
+    <section className="text-main-text bg-main-background p-5 rounded-md">
       <ProfileHeader 
         authUserId={user.id}
         accountId={userInfo.clerkId}

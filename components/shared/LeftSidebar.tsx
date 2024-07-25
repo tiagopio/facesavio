@@ -15,7 +15,7 @@ function LeftSidebar() {
 
   return (
     <section className="custom-scrollbar leftsidebar">
-      <div className="flex w-full flex-1 flex-col gap-6 px-6">
+      <div className="flex w-full flex-1 flex-col gap-6 px-8">
         {sidebarLinks.map((link) => {
           const isActive = (pathname.includes(link.route) && link.route.length > 1) || pathname === link.route;
 
@@ -25,7 +25,7 @@ function LeftSidebar() {
             <Link
               href={link.route}
               key={link.label}
-              className={`leftsidebar_link ${isActive && 'bg-primary-500'}`}
+              className={`leftsidebar_link ${isActive && 'bg-main-secondary'}`}
             >
               <Image 
                 src={link.imgURL}
@@ -34,7 +34,7 @@ function LeftSidebar() {
                 height={24}
               />
   
-              <p className="text-light-1 max-lg:hidden">{link.label}</p>
+              <p className="text-main-text font-medium max-lg:hidden">{link.label}</p>
             </Link>
           )})}
       </div>
@@ -50,7 +50,7 @@ function LeftSidebar() {
                     height={24}
                   />
 
-                  <p className="text-light-2 max-lg:hidden">Logout</p>
+                  <p className="text-main-text max-lg:hidden">Logout</p>
                 </div>
               </SignOutButton>
             </SignedIn>
