@@ -57,14 +57,21 @@ export function UserCard({
     }
 
     return (
-        <div className="rounded-lg flex flex-row bg-neutral-100 justify-between">
+        <div className="rounded-lg flex flex-row bg-white justify-between">
                 <div className="w-auto h-full aspect-square">
                 <Link href={`/profile/${username}`}>
                     {imageUrl && <Image src={imageUrl} alt={username} width={100} height={100} className="rounded-l-lg" />}
                </Link>
                 </div>
                 <div className="w-full flex p-3 flex-col items-start justify-center">
-                    <p className="tracking-tighter text-body-bold">{name}</p>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <p className="tracking-tighter text-body-bold">{name.split(" ")[0]}</p>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            {name}
+                        </TooltipContent>
+                    </Tooltip>
                     <p className="text-small-regular text-neutral-400 tracking-tighter">@{username}</p>
                 </div>
                 <div className="flex flex-col items-center justify-center px-3">

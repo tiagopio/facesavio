@@ -1,26 +1,28 @@
+import { Heart, Home, Plus, Search, UserRound } from "lucide-react";
+
 export const sidebarLinks = [
   {
-    imgURL: "/assets/home.svg",
+    icon: Home,
     route: "/",
     label: "Home",
   },
   {
-    imgURL: "/assets/search.svg",
+    icon: Search,
     route: "/search",
     label: "Search",
   },
   {
-    imgURL: "/assets/heart.svg",
+    icon: Heart,
     route: "/activity",
     label: "Activity",
   },
   {
-    imgURL: "/assets/create.svg",
+    icon: Plus,
     route: "/new-post",
     label: "New Post",
   },
   {
-    imgURL: "/assets/user.svg",
+    icon: UserRound,
     route: "/profile",
     label: "Profile",
   },

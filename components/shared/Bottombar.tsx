@@ -14,21 +14,17 @@ function Bottombar() {
       <div className="bottombar_container">
         {sidebarLinks.map((link) => {
             const isActive = (pathname.includes(link.route) && link.route.length > 1) || pathname === link.route;
-
+            const Icon = link.icon
             return (
               <Link
                 href={link.route}
                 key={link.label}
-                className={`bottombar_link ${isActive && 'bg-main-secondary'}`}
+                data-active={isActive}
+                className={`bottombar_link data-[active=true]:fill-white data-[active=true]:text-white data-[active=true]:bg-gradient-to-r from-main-primary to-main-secondary`}
               >
-                <Image 
-                  src={link.imgURL}
-                  alt={link.label}
-                  width={24}
-                  height={24}
-                />
+                <Icon />
     
-                <p className="text-subtle-medium text-main-text max-sm:hidden">{link.label.split(/\s+./)[0]}</p>
+                <p className="text-subtle-medium text-[inherit] max-sm:hidden">{link.label.split(/\s+./)[0]}</p>
               </Link>
             )})}
       </div>
