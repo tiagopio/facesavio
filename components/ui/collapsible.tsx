@@ -18,5 +18,6 @@ const CollapsibleContent = React.forwardRef<
 		{...props}
 	/>
 ));
+CollapsibleContent.displayName = "CollapsibleContent"
 
 export { Collapsible, CollapsibleContent, CollapsibleTrigger };
