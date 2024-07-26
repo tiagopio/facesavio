@@ -3,7 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { fetchUser, getUserByClerkId } from "@/lib/db/server";
 import AccountProfile from "@/components/forms/AccountProfile";
 
-export async function Page() {
+export default async function Page() {
   const user = await currentUser();
   if (!user) return null;
 
@@ -30,5 +30,3 @@ export async function Page() {
     </>
   );
 }
-
-export default Page;
