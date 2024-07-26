@@ -1,6 +1,6 @@
 "use client"
 
-import { Send } from "lucide-react";
+import { ChevronDown, Send } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Textarea } from "../ui/textarea";
@@ -13,6 +13,8 @@ import { post } from "./action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { postCreateSchema, PostCreateSchema } from "./schema";
+import { cn } from "@/lib/utils";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 
 
 export function PostCreate({ className }: {
@@ -40,53 +42,56 @@ export function PostCreate({ className }: {
     }
 
     return (
-        <Card className={className}>
-            <CardHeader>
-                <CardTitle>Crie um post</CardTitle>
-            </CardHeader>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <CardContent className="gap-3 flex flex-col">
-                    <FormField
-                        control={form.control}
-                        name="title"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormControl>
-                                    <Input placeholder="Título" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                    )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="message"
-                        render={({ field }) => (
+        <Collapsible className="bg-white rounded-lg">
+            <CollapsibleTrigger className="p-5 font-semibold flex justify-between w-full text-neutral-600 transition-colors duration-200 rounded-lg [&>svg]:data-[state=open]:rotate-180">
+                Crie um post
+                <ChevronDown className="transition-transform" />
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                        <CardContent className="gap-3 flex flex-col">
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Textarea
-                                            {...field}
-                                            className="resize-none h-20"
-                                            placeholder="Digite seu post aqui..."
-                                        />
+                                        <Input placeholder="Título" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                         )}
                         />
-                        </CardContent>
-                    <CardFooter className="flex justify-between">
-                        <Button size="sm">
-                            <Send />
-                            Post
-                        </Button>
-                        <span className="text-neutral-400 text-small-medium">
-                            Limite de 500 caracteres
-                        </span>
-                    </CardFooter>
-                </form>
-            </Form>
-        </Card>
+                        <FormField
+                            control={form.control}
+                            name="message"
+                            render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Textarea
+                                                {...field}
+                                                className="resize-none h-20"
+                                                placeholder="Digite seu post aqui..."
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                            )}
+                            />
+                            </CardContent>
+                        <CardFooter className="flex justify-between">
+                            <Button size="sm">
+                                <Send />
+                                Post
+                            </Button>
+                            <span className="text-neutral-400 text-small-medium">
+                                Limite de 500 caracteres
+                            </span>
+                        </CardFooter>
+                    </form>
+                </Form>
+            </CollapsibleContent>
+        </Collapsible>
     )
 }
