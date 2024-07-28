@@ -8,15 +8,14 @@ export default async function Page() {
   if (!user) return null;
 
   const userInfo = await getUserByClerkId({ clerkId: user.id });
-  if (!userInfo) return null;
 
   const userData = {
     id: user.id,
-    objectId: userInfo.id,
-    username: user.username ?? userInfo.username,
-    name: userInfo.name ?? user.firstName ?? "",
-    bio: userInfo.bio,
-    image: userInfo.imageUrl || user.imageUrl,
+    objectId: userInfo?.id ?? "",
+    username: user.username ?? userInfo?.username ?? "",
+    name: userInfo?.name ?? user.firstName ?? "",
+    bio: userInfo?.bio ?? "",
+    image: userInfo?.imageUrl ?? user.imageUrl ?? "",
   };
 
   return (
