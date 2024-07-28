@@ -19,9 +19,9 @@ export default async function Home() {
   return (
     <div className="text-main-text flex flex-col gap-5">
         <PostCreate className="rounded-xl" />
-        <div className="flex gap-2 text-neutral-800 items-center">
+        <div className="flex gap-2 text-neutral-800 items-center text-2xl font-bold tracking-tight pt-5">
           <MessageSquareText />
-          <h2 className="text-heading3-bold tracking-tight">Postagens recentes</h2>
+          <h2>Postagens recentes</h2>
         </div>
         <div className="flex flex-col gap-3">
           {posts.map(p => (

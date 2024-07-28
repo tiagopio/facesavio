@@ -63,21 +63,21 @@ export function UserCard({
                     {imageUrl && <Image src={imageUrl} alt={username} width={100} height={100} className="rounded-l-lg" />}
                </Link>
                 </div>
-                <div className="w-full flex p-3 flex-col items-start justify-center">
+                <div className="w-full flex p-3 flex-col gap-0 items-start justify-center">
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <p className="tracking-tighter text-body-bold">{name.split(" ")[0]}</p>
+                            <p className="font-bold tracking-tighter">{name.split(" ")[0]}</p>
                         </TooltipTrigger>
                         <TooltipContent>
                             {name}
                         </TooltipContent>
                     </Tooltip>
-                    <p className="text-small-regular text-neutral-400 tracking-tighter">@{username}</p>
+                    <p className="text-sm text-neutral-400 tracking-tighter">@{username}</p>
                 </div>
                 <div className="flex flex-col items-center justify-center px-3">
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button variant="default" data-unfollow-confirmation={unfollowConfirmation} size="icon" onClick={handleFollow} className="transition-colors data-[unfollow-confirmation='true']:bg-red-500 hover:bg-danger-500 hover:text-light-1">
+                            <Button data-unfollow-confirmation={unfollowConfirmation} size="icon" onClick={handleFollow} className="transition-colors data-[unfollow-confirmation='true']:bg-red-500 hover:bg-danger-500 hover:text-light-1">
                                 {unfollowConfirmation ? <Ban /> : following ? <Check /> : <UserRoundPlus />}
                             </Button>
                         </TooltipTrigger>

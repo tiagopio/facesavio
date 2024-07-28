@@ -16,7 +16,7 @@ function LeftSidebar() {
 
   return (
     <section className="custom-scrollbar leftsidebar">
-      <div className="flex w-full flex-1 flex-col gap-5 pl-8">
+      <div className="flex w-full flex-1 flex-col gap-5 pl-8 min-w-[250px]">
         {sidebarLinks.map((link) => {
           const isActive = (pathname.includes(link.route) && link.route.length > 1) || pathname === link.route;
 
@@ -28,7 +28,7 @@ function LeftSidebar() {
               href={link.route}
               key={link.label}
               data-active={isActive}
-              className={`leftsidebar_link data-[active=true]:fill-white data-[active=true]:text-white data-[active=true]:bg-gradient-to-r from-main-primary to-main-secondary`}
+              className={"leftsidebar_link data-[active=true]:fill-white data-[active=true]:text-white data-[active=true]:bg-gradient-to-r from-main-primary to-main-secondary"}
             >
               <Icon />
               <p className="text-[inherit] font-medium max-lg:hidden">{link.label}</p>

@@ -10,7 +10,7 @@
 
   /* Head Text */
   .head-text {
-    @apply text-heading2-bold text-light-1;
+    @apply font-bold text-4xl text-light-1;
   }
 
   /* Activity */
@@ -20,7 +20,7 @@
 
   /* No Result */
   .no-result {
-    @apply text-center !text-base-regular text-light-3;
+    @apply text-center text-base text-light-3;
   }
 
   /* Community Card */
@@ -29,7 +29,7 @@
   }
 
   .community-card_btn {
-    @apply rounded-lg bg-primary-500 px-5 py-1.5 text-small-regular !text-light-1 !important;
+    @apply rounded-lg bg-primary-500 px-5 py-1.5 text-sm !text-light-1 !important;
   }
 
   /* thread card  */
@@ -47,7 +47,7 @@
   }
 
   .user-card_btn {
-    @apply h-auto min-w-[74px] rounded-lg bg-primary-500 text-[12px] text-light-1 !important;
+    @apply h-auto min-w-[74px] rounded-lg bg-primary-500 text-base text-light-1 !important;
   }
 
   .searchbar {
@@ -55,7 +55,7 @@
   }
 
   .searchbar_input {
-    @apply border-none bg-dark-3 text-base-regular text-light-4 outline-none !important;
+    @apply border-none bg-dark-3 text-base text-light-4 outline-none !important;
   }
 
   .topbar {
@@ -157,5 +157,5 @@
 }
 
 .comment-form_btn {
-  @apply rounded-3xl bg-primary-500 px-8 py-2 !text-small-regular text-light-1 max-xs:w-full !important;
+  @apply rounded-3xl bg-primary-500 px-8 py-2 text-sm text-light-1 max-xs:w-full !important;
 }

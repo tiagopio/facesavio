@@ -16,15 +16,15 @@ export function PostCard({
     }
 }: Post & { user: User }) {
     return (
-        <Card>
+        <Card className="shadow-none">
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
             </CardHeader>
             <CardContent>{body}</CardContent>
-            <CardFooter className="flex gap-2 py-3 border-t justify-between text-small-medium">
-                <div className="flex gap-3 rounded items-center text-neutral-600">
-                    <Button variant="ghost" size="icon" className="h-7 w-7">
-                        <ThumbsUp className="w-4 h-4" />
+            <CardFooter className="flex gap-2 py-3 border-t justify-between text-sm">
+                <div className="flex gap-2 rounded items-center text-neutral-600">
+                    <Button variant="ghost" size="icon" className="w-8 h-8">
+                        <ThumbsUp />
                     </Button>
                     {likes} Likes
                 </div>

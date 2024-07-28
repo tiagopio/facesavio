@@ -50,7 +50,7 @@ export function PostCreate({ className }: {
             <CollapsibleContent>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <CardContent className="gap-3 flex flex-col">
+                        <CardContent className="gap-3 flex flex-col pt-1">
                         <FormField
                             control={form.control}
                             name="title"
@@ -85,7 +85,7 @@ export function PostCreate({ className }: {
                                 <Send />
                                 Post
                             </Button>
-                            <span className="text-neutral-400 text-small-medium">
+                            <span className="text-neutral-400 text-sm font-medium">
                                 Limite de 500 caracteres
                             </span>
                         </CardFooter>
