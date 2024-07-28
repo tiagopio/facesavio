@@ -119,12 +119,10 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
           name="profile_photo"
           render={({ field }) => (
             <FormItem className="flex items-center gap-4">
-              <FormLabel className="account-form_image-label">
-                <Avatar className="w-20 h-20">
-                  <AvatarImage src={field.value ?? "/assets/user.svg"} alt="user-logo" />
-                  <AvatarFallback>{initials(user.name || user.username)}</AvatarFallback>
-                </Avatar>
-              </FormLabel>
+              <Avatar className="w-20 h-20">
+                <AvatarImage src={field.value ?? "/assets/user.svg"} alt="user-logo" className="rounded-full" />
+                <AvatarFallback>{initials(user.name || user.username)}</AvatarFallback>
+              </Avatar>
 
               <FormControl className="flex-1">
                 <Input
