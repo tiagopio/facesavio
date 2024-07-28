@@ -64,10 +64,12 @@ export class UserRepository {
      * @returns Set<string>
     */
     public getFollowers = async (): Promise<Set<string>> => {
+        let userId = this.identifier.value;
+        if (this.identifier.tag !== "id")
+            userId = await this.getId();
+
         const followers = await db.follow.findMany({
-            where: {
-                userId: this.identifier.value
-            }
+            where: { userId }
         });
 
         const followerSet = new Set<string>();

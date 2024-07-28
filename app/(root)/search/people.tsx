@@ -10,6 +10,7 @@ export async function Users() {
     const userRepo = new UserRepository({ clerkId: clerk.id });
     const users = await getUsers({ max: 10 });
     const followers = await userRepo.getFollowers();
+    console.log(followers)
 
     return (
         <>
