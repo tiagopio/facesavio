@@ -18,7 +18,7 @@ import * as z from 'zod'
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { Textarea } from "../ui/textarea";
-import { isBase64Image } from "@/lib/utils";
+import { initials, isBase64Image } from "@/lib/utils";
 import { useUploadThing } from '@/lib/uploadthing'
 import { onboard } from "./action";
 import { toast } from "sonner";
@@ -26,6 +26,8 @@ import { redirect, useRouter } from "next/navigation";
 import { Loader, Send } from "lucide-react";
 import { Toaster } from "../ui/sonner";
 import { useUser } from "@clerk/nextjs";
+import { Avatar } from "@radix-ui/react-avatar";
+import { AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface Props {
   user: {
@@ -118,24 +120,10 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
           render={({ field }) => (
             <FormItem className="flex items-center gap-4">
               <FormLabel className="account-form_image-label">
-                {field.value ? (
-                  <Image
-                    src={field.value}
-                    alt="profile_photo"
-                    width={80}
-                    height={80}
-                    priority
-                    className="rounded-full object-contain"
-                  />
-                ) : (
-                  <Image
-                    src="/assets/profile.svg"
-                    alt="profile_photo"
-                    width={24}
-                    height={24}
-                    className="object-contain"
-                  />
-                )}
+                <Avatar className="w-20 h-20">
+                  <AvatarImage src={field.value ?? "/assets/user.svg"} alt="user-logo" />
+                  <AvatarFallback>{initials(user.name || user.username)}</AvatarFallback>
+                </Avatar>
               </FormLabel>
 
               <FormControl className="flex-1">

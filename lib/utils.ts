@@ -37,3 +37,13 @@ export function formatThreadCount(count: number): string {
     return `${threadCount} ${threadWord}`;
   }
 }
+
+export function initials(name: string | undefined | null) {
+  const defaultInitials = "FS";
+  if (!name) return defaultInitials;
+
+  const [firstName, lastName] = name?.split(" ");
+  if (!firstName) return defaultInitials;
+  
+  return `${firstName.charAt(0)}${lastName ? lastName.charAt(0) : ""}`;
+}

@@ -13,9 +13,9 @@ export function PostCard({
     body,
     likes,
     createdAt,
+    userId,
     user: {
         username,
-        name,
         imageUrl
     },
     ...props

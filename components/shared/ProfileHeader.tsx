@@ -8,6 +8,8 @@ import { Separator } from "../ui/separator";
 import { PostCard } from "../post/card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { initials } from "@/lib/utils";
 
 type Props = {
   clerkId: string;
@@ -34,15 +36,10 @@ function ProfileHeader({
       <CardContent className="flex flex-col gap-7">
         <div className="flex items-center justify-between">
           <div className='flex items-center gap-3'>
-            <div className='relative h-20 w-20 object-cover'>
-              <Image
-                src={visitedProfile.imageUrl ?? ""}
-                alt='logo'
-                fill
-                className='rounded-full object-cover'
-              />
-            </div>
-
+            <Avatar className="w-20 h-20">
+              <AvatarImage src={visitedProfile.imageUrl ?? ""} alt={visitedProfile.name} />
+              <AvatarFallback>{initials(visitedProfile.name || visitedProfile.username)}</AvatarFallback>
+            </Avatar>
             <div className='flex-1'>
               <h2 className='text-left font-bold text-xl text-main-text'>
                 {visitedProfile.name}

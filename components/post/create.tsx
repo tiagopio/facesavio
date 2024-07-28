@@ -11,7 +11,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "../ui/input";
 import { post } from "./action";
 import { toast } from "sonner";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { postCreateSchema, PostCreateSchema } from "./schema";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
@@ -23,6 +23,7 @@ export function PostCreate({ className }: {
 }) {
     const router = useRouter()
     const searchParams = useSearchParams();
+    const pathname = usePathname();
     const [open, setOpen] = useState(false);
     const form = useForm<z.infer<typeof postCreateSchema>>({
         resolver: zodResolver(postCreateSchema),
@@ -38,9 +39,14 @@ export function PostCreate({ className }: {
 
             setTimeout(() => {
                 form.setFocus("message")
-            }, 100)
+            }, 100);
+
+            const params = new URLSearchParams(searchParams)
+            params.delete("create-post")
+
+            router.push(`${pathname}?${params.toString()}`)
         }
-    }, [searchParams, form])
+    }, [searchParams, form, router, pathname])
 
     async function onSubmit(values: PostCreateSchema) {
         try {
