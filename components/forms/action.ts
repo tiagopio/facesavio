@@ -50,6 +50,7 @@ export async function onboard(user: User): Promise<ActionResponse> {
                 imageUrl: profile_photo,
                 name,
                 username,
+                bio
             }
         })
     }
