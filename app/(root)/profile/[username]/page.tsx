@@ -1,30 +1,51 @@
+import { PostCard } from "@/components/post/card";
 import ProfileHeader from "@/components/shared/ProfileHeader";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { fetchUser } from "@/lib/db/server";
+import { UserRepository } from "@/repository/user";
 import { currentUser } from "@clerk/nextjs/server"
+import { MessageSquareText } from "lucide-react";
+import { notFound } from "next/navigation";
 
 export default async function Page({ params: { username } }: { params: { username: string } }) {
 
-  const user = await currentUser();
-  const userInfo = await fetchUser(username);
+  const clerk = await currentUser();
+  if (!clerk) notFound();
 
-  if (!user || !user.username || !userInfo) {
+  const userRepo = new UserRepository({ username });
+  const user = await userRepo.getUser();
+
+  if (!user) {
     return (
       <section className="text-main-text">
         User not found.
       </section>
     );
   }
-  
+
+  const userPosts = await userRepo.getUserPosts();
+
   return (
-    <section className="text-main-text bg-main-background p-5 rounded-md">
+    <section className="flex flex-col gap-10">
       <ProfileHeader 
-        authUserId={user.id}
-        accountId={userInfo.clerkId}
-        name={userInfo.username}
-        username={userInfo.username}
-        imageUrl={userInfo.imageUrl ?? ""}
-        bio={userInfo.bio ?? ""}
+        clerkId={clerk.id}
+        visitedProfile={user}
+        posts={userPosts}
       />
+      <div className="flex flex-col">
+          <Card className="b rounded-b-none">
+            <CardHeader>
+              <CardTitle>
+                <MessageSquareText />
+                Postagens do usuário
+              </CardTitle>
+            </CardHeader>
+          </Card>
+            {userPosts.map((p, idx) => {
+              return <PostCard key={p.id} {...p} user={user} data-last={idx === userPosts.length - 1} className="data-[last=true]:rounded-b-xl rounded-none border-t-0" />
+            })}
+        </div>
     </section>
   )
 }

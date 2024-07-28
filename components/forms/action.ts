@@ -53,6 +53,13 @@ export async function onboard(user: User): Promise<ActionResponse> {
                 bio
             }
         })
+
+        await clerkClient().users.updateUser(u.id, {
+            publicMetadata: {
+                onboardingComplete: true,
+                id: u.id
+            }
+        });
     }
     catch (e) {
         return {
@@ -60,12 +67,6 @@ export async function onboard(user: User): Promise<ActionResponse> {
             message: "Erro ao atualizar dados"
         }
     }
-
-    await clerkClient().users.updateUser(u.id, {
-        publicMetadata: {
-            onboardingComplete: true
-        }
-    });
 
     return {
         error: false,

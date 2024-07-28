@@ -19,11 +19,11 @@ import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { isBase64Image } from "@/lib/utils";
-import { useUploadThing } from '@/lib/uploadthing' 
+import { useUploadThing } from '@/lib/uploadthing'
 import { onboard } from "./action";
 import { toast } from "sonner";
 import { redirect, useRouter } from "next/navigation";
-import { Loader } from "lucide-react";
+import { Loader, Send } from "lucide-react";
 import { Toaster } from "../ui/sonner";
 import { useUser } from "@clerk/nextjs";
 
@@ -38,7 +38,7 @@ interface Props {
   btnTitle: string;
 }
 
-const AccountProfile = ({user, btnTitle} : Props) => {
+const AccountProfile = ({ user, btnTitle }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing("media");
   const [loading, setLoading] = useState(false);
@@ -85,7 +85,7 @@ const AccountProfile = ({user, btnTitle} : Props) => {
 
     if (hasImageChanged) {
       const imgRes = await startUpload(files);
-      
+
       if (imgRes && imgRes[0].url) {
         values.profile_photo = imgRes[0].url;
       }
@@ -108,9 +108,9 @@ const AccountProfile = ({user, btnTitle} : Props) => {
 
   return (
     <Form {...form}>
-      <form 
+      <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col justify-start gap-10"
+        className="flex flex-col justify-start gap-10 bg-white rounded-lg"
       >
         <FormField
           control={form.control}
@@ -122,12 +122,12 @@ const AccountProfile = ({user, btnTitle} : Props) => {
                   <Image
                     src={field.value}
                     alt="profile_photo"
-                    width={96}
-                    height={96}
+                    width={80}
+                    height={80}
                     priority
                     className="rounded-full object-contain"
                   />
-                ): (
+                ) : (
                   <Image
                     src="/assets/profile.svg"
                     alt="profile_photo"
@@ -138,8 +138,8 @@ const AccountProfile = ({user, btnTitle} : Props) => {
                 )}
               </FormLabel>
 
-              <FormControl className="flex-1 text-base-semibold text-gray-200">
-                <Input 
+              <FormControl className="flex-1">
+                <Input
                   type="file"
                   accept="image/*"
                   placeholder="Upload a photo"
@@ -156,15 +156,11 @@ const AccountProfile = ({user, btnTitle} : Props) => {
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem className="flex flex-col gap-3 w-full">
-              <FormLabel className="text-base-semibold text-light-2">
-                Name
-              </FormLabel>
-
+            <FormItem className="flex flex-col w-full">
+              <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input 
+                <Input
                   type="text"
-                  className="account-form_input no-focus"
                   {...field}
                 />
               </FormControl>
@@ -177,15 +173,11 @@ const AccountProfile = ({user, btnTitle} : Props) => {
           control={form.control}
           name="username"
           render={({ field }) => (
-            <FormItem className="flex flex-col gap-3 w-full">
-              <FormLabel className="text-base-semibold text-light-2">
-                Username
-              </FormLabel>
-
+            <FormItem className="flex flex-col w-full">
+              <FormLabel>Username</FormLabel>
               <FormControl >
-                <Input 
+                <Input
                   type="text"
-                  className="account-form_input no-focus"
                   {...field}
                 />
               </FormControl>
@@ -198,15 +190,12 @@ const AccountProfile = ({user, btnTitle} : Props) => {
           control={form.control}
           name="bio"
           render={({ field }) => (
-            <FormItem className="flex flex-col gap-3 w-full">
-              <FormLabel className="text-base-semibold text-light-2">
-                Bio
-              </FormLabel>
-
+            <FormItem className="flex flex-col w-full">
+              <FormLabel>Bio</FormLabel>
               <FormControl>
-                <Textarea 
+                <Textarea
                   rows={10}
-                  className="account-form_input no-focus"
+                  className="resize-none"
                   {...field}
                 />
               </FormControl>
@@ -215,9 +204,12 @@ const AccountProfile = ({user, btnTitle} : Props) => {
           )}
         />
 
-        <Button type="submit" className="bg-primary-500 flex gap-2" disabled={loading}>
-          {loading && <Loader className="animate-spin" />}
-          Submit
+        <Button type="submit" className="flex gap-2 w-min mx-auto" disabled={loading}>
+          {loading
+            ? <Loader className="animate-spin" />
+            : <Send />
+          }
+          Enviar
         </Button>
       </form>
     </Form>

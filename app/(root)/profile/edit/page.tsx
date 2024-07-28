@@ -2,6 +2,8 @@ import { currentUser } from "@clerk/nextjs/server";
 
 import { fetchUser, getUserByClerkId } from "@/lib/db/server";
 import AccountProfile from "@/components/forms/AccountProfile";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { UserRoundPen } from "lucide-react";
 
 export default async function Page() {
   const user = await currentUser();
@@ -20,11 +22,24 @@ export default async function Page() {
 
   return (
     <>
-      <h1 className='head-text'>Edit Profile</h1>
-      <p className='mt-3 text-base-regular text-light-2'>Make any changes</p>
+      {/* <div className="flex flex-col">
+        <h1 className='font-bold text-2xl tracking-tight'>Edit Profile</h1>
+        <p className="text-neutral-500 text-sm">Make any changes</p>
+      </div> */}
 
-      <section className='mt-12'>
-        <AccountProfile user={userData} btnTitle='Continue' />
+      <section>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <UserRoundPen />
+              Editar perfil
+            </CardTitle>
+            <CardDescription>Realize qualquer mudança no seu perfil</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AccountProfile user={userData} btnTitle='Continue' />
+          </CardContent>
+        </Card>
       </section>
     </>
   );

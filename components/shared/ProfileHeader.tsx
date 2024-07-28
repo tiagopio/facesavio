@@ -1,65 +1,79 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Label } from "../ui/label";
+import { Badge } from "../ui/badge";
+import { MessageSquareText, SquareUserRound, UserRound } from "lucide-react";
+import { Post, User } from "@prisma/client";
+import { Separator } from "../ui/separator";
+import { PostCard } from "../post/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Button } from "../ui/button";
 
-interface Props {
-  accountId: string;
-  authUserId: string;
-  name: string;
-  username: string;
-  imageUrl: string;
-  bio: string;
+type Props = {
+  clerkId: string;
   type?: string;
-}
+  visitedProfile: User;
+  posts: Array<Post>;
+};
 
 function ProfileHeader({
-  accountId,
-  authUserId,
-  name,
-  username,
-  imageUrl,
-  bio,
+  clerkId,
+  visitedProfile,
   type,
+  posts
 }: Props) {
-  return (
-    <div className='flex w-full flex-col justify-start'>
-      <div className='flex items-center justify-between'>
-        <div className='flex items-center gap-3'>
-          <div className='relative h-20 w-20 object-cover'>
-            <Image
-              src={imageUrl}
-              alt='logo'
-              fill
-              className='rounded-full object-cover shadow-2xl'
-            />
-          </div>
 
-          <div className='flex-1'>
-            <h2 className='text-left text-heading3-bold text-main-text'>
-              {name}
-            </h2>
-            <p className='text-base-medium text-gray-1'>@{username}</p>
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          <UserRound />
+          Dados do usuário
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-7">
+        <div className="flex items-center justify-between">
+          <div className='flex items-center gap-3'>
+            <div className='relative h-20 w-20 object-cover'>
+              <Image
+                src={visitedProfile.imageUrl ?? ""}
+                alt='logo'
+                fill
+                className='rounded-full object-cover'
+              />
+            </div>
+
+            <div className='flex-1'>
+              <h2 className='text-left font-bold text-xl text-main-text'>
+                {visitedProfile.name}
+              </h2>
+              <p className='text-sm text-neutral-400'>@{visitedProfile.username}</p>
+            </div>
+          </div>
+          {clerkId === visitedProfile.clerkId && type !== "Community" && (
+            <Button asChild>
+              <Link href='/profile/edit'>
+                <Image
+                  src='/assets/edit.svg'
+                  alt='logout'
+                  width={16}
+                  height={16}
+                />
+                <p className='max-sm:hidden'>Edit</p>
+              </Link>
+            </Button>
+          )}
+        </div>
+        <Separator />
+        <div className="w-full flex flex-col justify-start rounded-lg p-3 gap-2">
+          <Label>Bio</Label>
+          <div className="py-3 px-5 rounded-lg bg-slate-50">
+            <p className="text-neutral-700 text-sm">{visitedProfile.bio}</p>
           </div>
         </div>
-        {accountId === authUserId && type !== "Community" && (
-          <Link href='/profile/edit'>
-            <div className='flex cursor-pointer gap-3 rounded-lg bg-dark-4 px-4 py-2'>
-              <Image
-                src='/assets/edit.svg'
-                alt='logout'
-                width={16}
-                height={16}
-              />
 
-              <p className='text-light-2 max-sm:hidden'>Edit</p>
-            </div>
-          </Link>
-        )}
-      </div>
-
-      <p className='mt-11 ml-7 max-w-lg text-base-regular text-main-text'>{bio}</p>
-
-      <div className='mt-12 h-0.5 w-full bg-gray-300' />
-    </div>
+      </CardContent>
+    </Card >
   );
 }
 

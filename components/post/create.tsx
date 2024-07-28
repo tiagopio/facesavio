@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronDown, Send } from "lucide-react";
+import { ChevronDown, PencilLine, Send } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Textarea } from "../ui/textarea";
@@ -11,16 +11,19 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "../ui/input";
 import { post } from "./action";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { postCreateSchema, PostCreateSchema } from "./schema";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
+import { useEffect, useRef, useState } from "react";
 
 
 export function PostCreate({ className }: {
     className?: string
 }) {
     const router = useRouter()
+    const searchParams = useSearchParams();
+    const [open, setOpen] = useState(false);
     const form = useForm<z.infer<typeof postCreateSchema>>({
         resolver: zodResolver(postCreateSchema),
         defaultValues: {
@@ -28,6 +31,16 @@ export function PostCreate({ className }: {
             message: "",
         },
     })
+
+    useEffect(() => {
+        if (searchParams.has("create-post")) {
+            setOpen(true)
+
+            setTimeout(() => {
+                form.setFocus("message")
+            }, 100)
+        }
+    }, [searchParams, form])
 
     async function onSubmit(values: PostCreateSchema) {
         try {
@@ -42,56 +55,63 @@ export function PostCreate({ className }: {
     }
 
     return (
-        <Collapsible className="bg-white rounded-lg">
-            <CollapsibleTrigger className="p-5 font-semibold flex justify-between w-full text-neutral-600 transition-colors duration-200 rounded-lg [&>svg]:data-[state=open]:rotate-180">
-                Crie um post
-                <ChevronDown className="transition-transform" />
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <CardContent className="gap-3 flex flex-col pt-1">
-                        <FormField
-                            control={form.control}
-                            name="title"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input placeholder="Título" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                        )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="message"
-                            render={({ field }) => (
-                                    <FormItem>
-                                        <FormControl>
-                                            <Textarea
-                                                {...field}
-                                                className="resize-none h-20"
-                                                placeholder="Digite seu post aqui..."
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                            )}
-                            />
+        <Card>
+            <Collapsible open={open} onOpenChange={setOpen}>
+                <CardHeader>
+                    <CollapsibleTrigger className="w-full flex justify-between items-center [&>svg]:data-[state=open]:rotate-180">
+                        <CardTitle>
+                            <PencilLine />
+                            Crie um post
+                        </CardTitle>
+                        <ChevronDown className="transition-transform" />
+                    </CollapsibleTrigger>
+                </CardHeader>
+                <CollapsibleContent>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)}>
+                            <CardContent className="gap-3 flex flex-col pt-1">
+                                <FormField
+                                    control={form.control}
+                                    name="title"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Input placeholder="Título" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="message"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Textarea
+                                                    {...field}
+                                                    className="resize-none h-20"
+                                                    placeholder="O que você está pensando..."
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                             </CardContent>
-                        <CardFooter className="flex justify-between">
-                            <Button size="sm">
-                                <Send />
-                                Post
-                            </Button>
-                            <span className="text-neutral-400 text-sm font-medium">
-                                Limite de 500 caracteres
-                            </span>
-                        </CardFooter>
-                    </form>
-                </Form>
-            </CollapsibleContent>
-        </Collapsible>
+                            <CardFooter className="flex justify-between">
+                                <Button size="sm">
+                                    <Send />
+                                    Post
+                                </Button>
+                                <span className="text-neutral-400 text-sm font-medium">
+                                    Limite de 500 caracteres
+                                </span>
+                            </CardFooter>
+                        </form>
+                    </Form>
+                </CollapsibleContent>
+            </Collapsible>
+        </Card>
     )
 }

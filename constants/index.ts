@@ -18,7 +18,7 @@ export const sidebarLinks = [
   },
   {
     icon: Plus,
-    route: "/new-post",
+    route: "/?create-post=true",
     label: "New Post",
   },
   {

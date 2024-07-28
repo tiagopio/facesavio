@@ -4,23 +4,34 @@ import { ThumbsUp } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import { formatDistance } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { ComponentProps } from "react";
 
 export function PostCard({
     title,
     body,
     likes,
+    createdAt,
     user: {
         username,
         name,
         imageUrl
-    }
-}: Post & { user: User }) {
+    },
+    ...props
+}: Post & { user: User } & ComponentProps<"div">) {
+
     return (
-        <Card className="shadow-none">
-            <CardHeader>
+        <Card {...props}>
+            <CardHeader className="flex-row justify-between items-center">
                 <CardTitle>{title}</CardTitle>
+                <div className="text-xs text-neutral-400">
+                    <span>{formatDistance(new Date(createdAt), new Date(), { addSuffix: true, locale: ptBR })}</span>
+                </div>
             </CardHeader>
-            <CardContent>{body}</CardContent>
+            <CardContent>
+                {body}
+            </CardContent>
             <CardFooter className="flex gap-2 py-3 border-t justify-between text-sm">
                 <div className="flex gap-2 rounded items-center text-neutral-600">
                     <Button variant="ghost" size="icon" className="w-8 h-8">
