@@ -33,6 +33,7 @@ interface Props {
     username: string | null;
     name: string | null;
     image: string;
+    bio: string | null;
   }
   btnTitle: string;
 }
@@ -50,7 +51,7 @@ const AccountProfile = ({user, btnTitle} : Props) => {
       profile_photo: user?.image || "",
       name: user?.name || "",
       username: user?.username || "",
-      bio: ""
+      bio: user.bio || "",
     }
   });
 
