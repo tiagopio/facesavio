@@ -25,27 +25,33 @@ export default async function Page({ params: { username } }: { params: { usernam
   }
 
   const userPosts = await userRepo.getUserPosts();
+  const hasPosts = userPosts.length > 0;
 
   return (
     <section className="flex flex-col gap-10">
-      <ProfileHeader 
+      <ProfileHeader
         clerkId={clerk.id}
         visitedProfile={user}
         posts={userPosts}
       />
       <div className="flex flex-col">
-          <Card className="b rounded-b-none">
-            <CardHeader>
-              <CardTitle>
-                <MessageSquareText />
-                Postagens do usuário
-              </CardTitle>
-            </CardHeader>
-          </Card>
-            {userPosts.map((p, idx) => {
-              return <PostCard key={p.id} {...p} user={user} data-last={idx === userPosts.length - 1} className="data-[last=true]:rounded-b-xl rounded-none border-t-0" />
-            })}
-        </div>
+        <Card className="b rounded-b-none">
+          <CardHeader>
+            <CardTitle>
+              <MessageSquareText />
+              Postagens do usuário
+            </CardTitle>
+          </CardHeader>
+        </Card>
+        {hasPosts
+          ? userPosts.map((p, idx) => {
+            return <PostCard key={p.id} {...p} user={user} data-last={idx === userPosts.length - 1} className="data-[last=true]:rounded-b-xl rounded-none border-t-0" />
+          })
+          : <div className="w-full rounded-b-xl p-10 flex items-center justify-center bg-white border border-t-0">
+            <p className="text-neutral-500 text-sm">Este usuário ainda não fez nenhuma postagem.</p>
+          </div>
+        }
+      </div>
     </section>
   )
 }

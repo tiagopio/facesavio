@@ -49,6 +49,20 @@ export class UserRepository {
     }
 
     /**
+     * Returns an array of user objects
+     * @returns Array<User>
+     */
+    public getUsers = async (ids: Set<string> | Array<string>): Promise<Array<User>> => {
+        return await db.user.findMany({
+            where: {
+                id: {
+                    in: Array.from(ids)
+                }
+            }
+        });
+    }
+
+    /**
      * Returns a user object
      * @returns User
      * @throws Error if user is not found
@@ -78,6 +92,23 @@ export class UserRepository {
         });
 
         return followerSet;
+    }
+
+    public getFollowing = async (): Promise<Set<string>> => {
+        let userId = this.identifier.value;
+        if (this.identifier.tag !== "id")
+            userId = await this.getId();
+
+        const following = await db.follow.findMany({
+            where: { followingId: userId }
+        });
+
+        const followingSet = new Set<string>();
+        following.forEach(f => {
+            followingSet.add(f.userId);
+        });
+
+        return followingSet;
     }
 
     /**
