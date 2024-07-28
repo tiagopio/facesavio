@@ -11,7 +11,8 @@ export default async function Page() {
     id: user.id,
     username: user.username,
     name: user.firstName || user.fullName,
-    image: user.imageUrl
+    image: user.imageUrl,
+    bio: "",
   }
 
   return (
