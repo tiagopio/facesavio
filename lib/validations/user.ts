@@ -1,7 +1,7 @@
 import * as z from 'zod'
 
 export const UserValidation = z.object({
-  profile_photo: z.string().url(),
+  profile_photo: z.union([z.literal(""), z.string().trim().url()]),
   name: z.string().min(3, {
     message: "Seu nome deve ter no mínimo 3 caracteres"
   }).max(30),

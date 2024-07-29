@@ -1,41 +1,76 @@
 import { PostCard } from "@/components/post/card";
 import ProfileHeader from "@/components/shared/ProfileHeader";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { fetchUser } from "@/lib/db/server";
 import { UserRepository } from "@/repository/user";
 import { currentUser } from "@clerk/nextjs/server"
-import { MessageSquareText } from "lucide-react";
+import { ArrowLeft, Home, MessageSquare, MessageSquareText, Search, SearchX } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+
+function NotFound() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          <SearchX />
+          Usuário não encontrado
+        </CardTitle>
+        <CardDescription>
+          O usuário que você está tentando acessar não existe.
+        </CardDescription>
+      </CardHeader>
+        <CardContent className="flex gap-2">
+          <Button asChild>
+            <Link href="/">
+              <MessageSquare />
+              Início
+            </Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link href="/search">
+              <ArrowLeft />
+              Buscar usuários
+            </Link>
+          </Button>
+        </CardContent>
+    </Card>
+  );
+}
 
 export default async function Page({ params: { username } }: { params: { username: string } }) {
 
   const clerk = await currentUser();
   if (!clerk) notFound();
 
+  let hasIssue = false;
   const userRepo = new UserRepository({ username });
-  const user = await userRepo.getUser();
+  const [user, userPosts, followers, following] = await Promise.all([
+    userRepo.getUser(), 
+    userRepo.getUserPosts(), 
+    userRepo.getFollowers(), 
+    userRepo.getFollowing()
+  ]).catch(() => {
+    hasIssue = true
+    return []
+  });
 
-  if (!user) {
-    return (
-      <section className="text-main-text">
-        User not found.
-      </section>
-    );
+  if (hasIssue || !user) {
+    return <NotFound />
   }
 
-  const userPosts = await userRepo.getUserPosts();
   const hasPosts = userPosts.length > 0;
-
   return (
     <section className="flex flex-col gap-10">
       <ProfileHeader
         clerkId={clerk.id}
         visitedProfile={user}
-        posts={userPosts}
+        followers={followers}
+        following={following}
       />
       <div className="flex flex-col">
-        <Card className="b rounded-b-none">
+        <Card className="rounded-b-none">
           <CardHeader>
             <CardTitle>
               <MessageSquareText />

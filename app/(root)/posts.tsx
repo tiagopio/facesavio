@@ -1,15 +1,15 @@
 import { PostCard } from "@/components/post/card";
 import { db } from "@/lib/db";
+import { UserRepository } from "@/repository/user";
+import { currentUser } from "@clerk/nextjs/server";
+import { notFound } from "next/navigation";
 
 export async function Posts() {
-    const posts = await db.post.findMany({
-        include: {
-            user: true
-        },
-        orderBy: {
-            createdAt: "desc"
-        }
-    });
+    const clerk = await currentUser();
+    if (!clerk) return notFound();
+
+    const userRepo = new UserRepository({ clerkId: clerk.id });
+    const posts = await userRepo.getSuggestedPosts();
 
     return (
         <>

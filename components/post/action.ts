@@ -3,7 +3,8 @@
 import { ActionResponse } from "@/types";
 import { PostCreateSchema, postCreateSchema } from "./schema";
 import { currentUser } from "@clerk/nextjs/server";
-import { db, getUserByClerkId } from "@/lib/db";
+import { db } from "@/lib/db";
+import { UserRepository } from "@/repository/user";
 
 export async function post(values: PostCreateSchema): Promise<ActionResponse> {
     const clerk = await currentUser();
@@ -17,7 +18,8 @@ export async function post(values: PostCreateSchema): Promise<ActionResponse> {
     if (!success || !clerk)
         return badRequest
 
-    const user = await getUserByClerkId({ clerkId: clerk.id })
+    const userRepo = new UserRepository({ clerkId: clerk.id });
+    const user = await userRepo.getUser();
     if (!user) return badRequest
 
     const { message, title } = data;

@@ -69,7 +69,9 @@ export function PostCreate({ className }: {
                             <PencilLine />
                             Crie um post
                         </CardTitle>
-                        <ChevronDown className="transition-transform" />
+                        <Button size="icon-sm" variant="ghost" asChild>
+                            <ChevronDown className="transition-transform" />
+                        </Button>
                     </CollapsibleTrigger>
                 </CardHeader>
                 <CollapsibleContent>

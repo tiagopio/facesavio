@@ -7,4 +7,9 @@ declare global {
       id?: string;
     };
   }
+
+  interface UserPublicMetadata {
+    onboardingComplete?: boolean;
+    id?: string;
+  }
 }

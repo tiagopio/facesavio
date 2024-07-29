@@ -1,11 +1,18 @@
 import { CalendarBox } from "@/components/custom/calendar"
+import { Card, CardHeader, CardTitle } from "../ui/card";
+import { BadgePlus } from "lucide-react";
 
 function RightSidebar() {
   return (
-    <section className="custom-scrollbar rightsidebar">
-      <div className="flex flex-1 flex-col justify-start">
-        <h3 className="text-heading4-medium text-main-text">Suggested Users</h3>
-      </div>
+    <section className="rightsidebar">
+      <Card className="min-w-[250px]">
+        <CardHeader>
+          <CardTitle className="text-sm">
+            <BadgePlus />
+            Sugestões
+          </CardTitle>
+        </CardHeader>
+      </Card>
     </section>
   )
 }

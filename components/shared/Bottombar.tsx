@@ -23,8 +23,7 @@ function Bottombar() {
                 className={`bottombar_link data-[active=true]:fill-white data-[active=true]:text-white data-[active=true]:bg-gradient-to-r from-main-primary to-main-secondary`}
               >
                 <Icon />
-    
-                <p className="text-subtle-medium text-[inherit] max-sm:hidden">{link.label.split(/\s+./)[0]}</p>
+                <p className="text-sm text-[inherit] max-sm:hidden">{link.label.split(/\s+./)[0]}</p>
               </Link>
             )})}
       </div>

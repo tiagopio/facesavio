@@ -1,8 +1,9 @@
 "use server"
 
 import { currentUser } from "@clerk/nextjs/server"
-import { db, getUserByClerkId, getUserByUsername } from "."
+import { db } from "."
 import { ActionResponse } from "@/types"
+import { UserRepository } from "@/repository/user"
 
 async function followCheck({ username }: { username: string }) {
     const clerk = await currentUser()
@@ -10,8 +11,11 @@ async function followCheck({ username }: { username: string }) {
         throw new Error("Usuário não encontrado")
     }
     
-    const follower = await getUserByUsername({ username })
-    const user = await getUserByClerkId({ clerkId: clerk.id })
+    const followerRepo = new UserRepository({ username })
+    const follower = await followerRepo.getUser()
+
+    const userRepo = new UserRepository({ clerkId: clerk.id })
+    const user = await userRepo.getUser()
     
     if (typeof username !== "string" || !follower || !user || user.id === follower.id) {
         throw new Error("Bad request")
@@ -64,40 +68,5 @@ export async function unfollow({ username }: { username: string }): Promise<Acti
     return {
         error: false,
         message: "Usuário deixado de seguir com sucesso"
-    }
-}
-
-
-/**
- * Returns a map for username, to a boolean
- */
-export async function getFollowers(): Promise<Map<string, boolean> | null> {
-    const clerk = await currentUser()
-    if (!clerk) {
-        return null
-    }
-
-    const user = await getUserByClerkId({ clerkId: clerk.id })
-    if (!user) {
-        return null
-    }
-
-    try {
-        const followers = await db.follow.findMany({
-            where: {
-                userId: user.id
-            }
-        })
-    
-        const followerMap = new Map<string, boolean>()
-        followers.forEach(f => {
-            followerMap.set(f.followingId, true)
-        })
-    
-        return followerMap
-    }
-    catch (e) {
-        console.error(e)
-        return null
     }
 }

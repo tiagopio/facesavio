@@ -1,15 +1,19 @@
 import { currentUser } from "@clerk/nextjs/server";
 
-import { fetchUser, getUserByClerkId } from "@/lib/db/server";
 import AccountProfile from "@/components/forms/AccountProfile";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserRoundPen } from "lucide-react";
+import { ArrowLeft, Info, UserRoundPen } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { UserRepository } from "@/repository/user";
 
 export default async function Page() {
   const user = await currentUser();
   if (!user) return null;
 
-  const userInfo = await getUserByClerkId({ clerkId: user.id });
+  const userRepo = new UserRepository({ clerkId: user.id });
+  const userInfo = await userRepo.getUser();
 
   const userData = {
     id: user.id,
@@ -22,25 +26,29 @@ export default async function Page() {
 
   return (
     <>
-      {/* <div className="flex flex-col">
-        <h1 className='font-bold text-2xl tracking-tight'>Edit Profile</h1>
-        <p className="text-neutral-500 text-sm">Make any changes</p>
-      </div> */}
-
-      <section>
-        <Card>
-          <CardHeader>
-            <CardTitle>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex justify-between">
+            <div className="flex items-center gap-2">
               <UserRoundPen />
               Editar perfil
-            </CardTitle>
-            <CardDescription>Realize qualquer mudança no seu perfil</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <AccountProfile user={userData} btnTitle='Continue' />
-          </CardContent>
-        </Card>
-      </section>
+            </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="icon-sm" variant="outline" asChild>
+                  <Link href='/profile'>
+                    <ArrowLeft />
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Voltar</TooltipContent>
+            </Tooltip>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <AccountProfile user={userData} btnTitle='Continue' />
+        </CardContent>
+      </Card>
     </>
   );
 }

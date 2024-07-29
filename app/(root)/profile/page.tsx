@@ -1,13 +1,14 @@
-import { getUserByClerkId } from "@/lib/db";
+import { UserRepository } from "@/repository/user";
 import { currentUser } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export default async function Page() {
     const clerk = await currentUser();
-    if (!clerk) return null;
+    if (!clerk) return notFound();
 
-    const user = await getUserByClerkId({ clerkId: clerk.id });
-    if (!user) return null;
+    const userRepo = new UserRepository({ clerkId: clerk.id });
+    const user = await userRepo.getUser();
+    if (!user) return notFound();
 
     redirect(`/profile/${user.username}`);
 }

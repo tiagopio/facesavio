@@ -7,6 +7,8 @@ import Link from "next/link";
 import { formatDistance } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ComponentProps } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { initials } from "@/lib/utils";
 
 export function PostCard({
     title,
@@ -15,6 +17,7 @@ export function PostCard({
     createdAt,
     userId,
     user: {
+        name,
         username,
         imageUrl
     },
@@ -34,7 +37,7 @@ export function PostCard({
             </CardContent>
             <CardFooter className="flex gap-2 py-3 border-t justify-between text-sm">
                 <div className="flex gap-2 rounded items-center text-neutral-600">
-                    <Button variant="ghost" size="icon" className="w-8 h-8">
+                    <Button variant="ghost" size="icon-sm">
                         <ThumbsUp />
                     </Button>
                     {likes} Likes
@@ -42,7 +45,10 @@ export function PostCard({
                 <div className="flex gap-3 items-center">
                     <span className="text-neutral-600">@{username}</span>
                     <Link href={`/profile/${username}`}>
-                        <Image src={imageUrl ?? ""} className="rounded-full" alt={username} width={25} height={25} />
+                        <Avatar className="w-6 h-6 text-xs">
+                            <AvatarImage src={imageUrl ?? ""} alt={username} />
+                            <AvatarFallback>{initials(name || username)}</AvatarFallback>
+                        </Avatar>
                     </Link>
                 </div>
             </CardFooter>

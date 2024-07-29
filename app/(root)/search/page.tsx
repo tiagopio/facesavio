@@ -1,13 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { UserCard } from "@/components/user/card";
-import { getUsers, getFollowers } from "@/lib/db";
 import { Search } from "lucide-react";
 import { Suspense } from "react";
-import { Users } from "./people";
+import { Users } from "./users";
 import Loading from "./loading";
+import SearchUsers from "./search-users";
 
-export default function Page() {
+export default function Page({ searchParams: { query } }: { searchParams: { query?: string } }) {
     return (
         <div className="flex flex-col gap-5">
             <Card>
@@ -19,12 +17,12 @@ export default function Page() {
                     <CardDescription>Encontre pessoas na plataforma</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Input placeholder="Buscar..." className="bg-white" />
+                    <SearchUsers />
                 </CardContent>
             </Card>
             <Suspense fallback={<Loading />}>
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-                    <Users />
+                    <Users query={query} />
                 </div>
             </Suspense>
         </div>

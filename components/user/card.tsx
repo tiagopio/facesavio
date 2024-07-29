@@ -3,15 +3,15 @@
 import { User } from "@prisma/client";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
-import { Button } from "../ui/button";
+import { Button, ButtonProps } from "../ui/button";
 import Link from "next/link";
 import { Ban, Check, StopCircle, UserRound, UserRoundPlus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { useState } from "react";
+import { ComponentProps, MouseEvent, MouseEventHandler, useState } from "react";
 import { follow, unfollow } from "@/lib/db/actions";
 import { toast } from "sonner";
 
-export function UserCard({ 
+export function UserCard({
     username,
     imageUrl,
     bio,
@@ -24,8 +24,12 @@ export function UserCard({
     const [unfollowConfirmation, setUnfollowConfirmation] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const handleFollow = async () => {
-        if (loading) return;
+    const handleFollow = async (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (loading) {
+            toast.info("Aguarde um momento...");
+            return
+        };
 
         setLoading(true);
         if (following && unfollowConfirmation) {
@@ -46,7 +50,7 @@ export function UserCard({
         }
         else {
             setFollowing(true);
-            const { error, message } =  await follow({ username });
+            const { error, message } = await follow({ username });
             if (error) {
                 setFollowing(false);
                 toast.error(message);
@@ -57,11 +61,10 @@ export function UserCard({
     }
 
     return (
-        <div className="rounded-lg flex flex-row bg-white justify-between">
-                <div className="w-auto h-full aspect-square">
-                <Link href={`/profile/${username}`}>
-                    {imageUrl && <Image src={imageUrl} alt={username} width={100} height={100} className="rounded-l-lg" />}
-               </Link>
+        <Link href={`/profile/${username}`}>
+            <div className="rounded-lg flex flex-row bg-white justify-between border hover:border-neutral-300 transition-colors">
+                <div className="w-auto h-full aspect-square p-3">
+                    {imageUrl && <Image src={imageUrl} alt={username} width={100} height={100} className="rounded-lg" />}
                 </div>
                 <div className="w-full flex p-3 flex-col gap-0 items-start justify-center">
                     <Tooltip>
@@ -77,7 +80,7 @@ export function UserCard({
                 <div className="flex flex-col items-center justify-center px-3">
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button data-unfollow-confirmation={unfollowConfirmation} size="icon" onClick={handleFollow} className="transition-colors data-[unfollow-confirmation='true']:bg-red-500 hover:bg-danger-500 hover:text-light-1">
+                            <Button variant={unfollowConfirmation ? "destructive" : "outline"} size="icon" onClick={handleFollow} className="transition-colors">
                                 {unfollowConfirmation ? <Ban /> : following ? <Check /> : <UserRoundPlus />}
                             </Button>
                         </TooltipTrigger>
@@ -87,5 +90,6 @@ export function UserCard({
                     </Tooltip>
                 </div>
             </div>
+        </Link>
     )
 }

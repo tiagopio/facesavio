@@ -26,8 +26,8 @@ import { redirect, useRouter } from "next/navigation";
 import { Loader, Send } from "lucide-react";
 import { Toaster } from "../ui/sonner";
 import { useUser } from "@clerk/nextjs";
-import { Avatar } from "@radix-ui/react-avatar";
-import { AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { UserRepository } from "@/repository/user";
 
 interface Props {
   user: {
@@ -81,15 +81,17 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
 
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
     setLoading(true);
+    
     const blob = values.profile_photo;
-
-    const hasImageChanged = isBase64Image(blob);
-
-    if (hasImageChanged) {
-      const imgRes = await startUpload(files);
-
-      if (imgRes && imgRes[0].url) {
-        values.profile_photo = imgRes[0].url;
+    if (blob) {
+      const hasImageChanged = isBase64Image(blob);
+  
+      if (hasImageChanged) {
+        const imgRes = await startUpload(files);
+  
+        if (imgRes && imgRes[0].url) {
+          values.profile_photo = imgRes[0].url;
+        }
       }
     }
 
@@ -112,7 +114,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col justify-start gap-10 bg-white rounded-lg"
+        className="flex flex-col justify-start gap-10"
       >
         <FormField
           control={form.control}
@@ -120,7 +122,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
           render={({ field }) => (
             <FormItem className="flex items-center gap-4">
               <Avatar className="w-20 h-20">
-                <AvatarImage src={field.value ?? "/assets/user.svg"} alt="user-logo" className="rounded-full" />
+                <AvatarImage src={field.value ?? "/assets/user.svg"} alt="user-logo" />
                 <AvatarFallback>{initials(user.name || user.username)}</AvatarFallback>
               </Avatar>
 
@@ -133,6 +135,14 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                   onChange={(e) => handleImage(e, field.onChange)}
                 />
               </FormControl>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => field.onChange("")}
+              >
+                Remover foto
+              </Button>
               <FormMessage />
             </FormItem>
           )}

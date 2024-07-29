@@ -1,8 +1,8 @@
-import { Heart, Home, Plus, Search, UserRound } from "lucide-react";
+import { Heart, MessageSquare, Plus, Search, UserRound } from "lucide-react";
 
 export const sidebarLinks = [
   {
-    icon: Home,
+    icon: MessageSquare,
     route: "/",
     label: "Home",
   },
