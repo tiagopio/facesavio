@@ -5,10 +5,10 @@ import { dark } from "@clerk/themes";
 
 function Topbar() {
   return (
-    <nav className="topbar">
-      <Link href="/" className="flex items-center">
-        <Image src={"/assets/face-savio.svg"} alt="logo" width={50} height={50} />
-        <p className="px-4 text-xl tracking-tight font-bold bg-gradient-to-t from-main-primary to-main-secondary bg-clip-text text-transparent max-xs:hidden">FaceSavio</p>
+    <nav className="topbar md:px-10 px-7">
+      <Link href="/" className="flex items-center gap-2 py-3">
+        {/* <Image src={"/assets/logo.svg"} alt="logo" width={50} height={50} /> */}
+        <Image src={"/assets/facesavio.png"} alt="logo" width={150} height={40} />
       </Link>
 
       <div className="flex items-center gap-1">
