@@ -6,6 +6,7 @@ import { Post, User } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 
 type UserProps = RequireAtLeastOne<{ username: string, clerkId: string, id: string }>
+type QueryUser = RequireAtLeastOne<{ set: Set<string> | Array<string>, query: string }> & { max?: number }
 type Identifier = { value: string, tag: keyof UserProps }
 
 export class UserRepository {
@@ -37,6 +38,9 @@ export class UserRepository {
      * @throws Error if user is not found
      */
     private getId = async (): Promise<string> => {
+        if (this.identifier.tag === "id")
+            return this.identifier.value;
+
         let userId = this.userId
 
         // If the user id is not cached, fetch it from the database
@@ -66,14 +70,21 @@ export class UserRepository {
      * Returns an array of user objects
      * @returns Array<User>
      */
-    public getUsers = async (ids: Set<string> | Array<string>): Promise<Array<User>> => {
-        return await db.user.findMany({
-            where: {
-                id: {
-                    in: Array.from(ids)
+    public static getUsers = async ({ query, set, max = 10 }: QueryUser): Promise<Array<User>> => {
+        if (query) {
+            return await UserRepository.queryUsers({ query, max });
+        }
+        else if (set) {
+            return await db.user.findMany({
+                where: {
+                    id: {
+                        in: Array.from(set)
+                    }
                 }
-            }
-        });
+            });
+        }
+        else
+            throw new Error("Invalid query");
     }
 
     /**
@@ -92,10 +103,7 @@ export class UserRepository {
      * @returns Set<string>
     */
     public getFollowers = async (): Promise<Set<string>> => {
-        let userId = this.identifier.value;
-        if (this.identifier.tag !== "id")
-            userId = await this.getId();
-
+        const userId = await this.getId();
         const followers = await db.follow.findMany({
             where: { userId }
         });
@@ -112,10 +120,7 @@ export class UserRepository {
      * @returns Set<string>
     */
     public getFollowing = async (): Promise<Set<string>> => {
-        let userId = this.identifier.value;
-        if (this.identifier.tag !== "id")
-            userId = await this.getId();
-
+        const userId = await this.getId();
         const following = await db.follow.findMany({
             where: { followingId: userId }
         });
@@ -134,10 +139,7 @@ export class UserRepository {
      * @throws Error if user is not found
     */
     public getUserPosts = async (): Promise<Array<Post>> => {
-        let userId = this.identifier.value;
-        if (this.identifier.tag !== "id")
-            userId = await this.getId();
-
+        const userId = await this.getId();
         return await db.post.findMany({
             where: { userId },
             orderBy: { createdAt: "desc" }
@@ -149,7 +151,7 @@ export class UserRepository {
      * This function is cached for 60 seconds.
      * @returns Array<User>
      */
-    public static queryUsers = ({ max = 10, query }: { max?: number, query: string }) => unstable_cache(
+    private static queryUsers = ({ max = 10, query }: { max?: number, query: string }) => unstable_cache(
         async ({
             max = 10,
             query
@@ -199,10 +201,13 @@ export class UserRepository {
         const followers = await this.getFollowers();
         const userId = await this.getId();
 
+        const isFollowing = (id: string) => following.has(id);
+        const isFollower = (id: string) => followers.has(id);
+
         // Followers that the user is not following
         const unfollowed = new Set<string>();
         followers.forEach(f => {
-            if (!following.has(f) && f !== userId)
+            if (!isFollowing(f))
                 unfollowed.add(f);
         })
 
@@ -212,29 +217,29 @@ export class UserRepository {
                 userId: { in: Array.from(following) }
             }
         });
-        const friendsOfFriends = new Set<string>();
+
+        // Map of relevance for each user (calculates how many friends in common for each user)
+        const relevanceMap = new Map<string, number>();
         friendsOfFriendsQuery.forEach(f => {
-            if (f.followingId !== userId || !following.has(f.userId))
-                friendsOfFriends.add(f.followingId);
+            if (f.followingId !== userId) {
+                const relevance = relevanceMap.get(f.followingId) || 0;
+                relevanceMap.set(f.followingId, relevance + 1);
+            }
+        });
+
+        const friendsOfFriends = new Set<string>();
+        const sorted = Array.from(relevanceMap.entries()).sort((a, b) => b[1] - a[1]);
+        sorted.forEach(f => {
+            friendsOfFriends.add(f[0]);
         });
 
         const target = await db.user.findMany({
             take: max,
             where: {
-                OR: [
-                    {
-                        // Users that my friends are following
-                        id: {
-                            in: Array.from(friendsOfFriends)
-                        }
-                    },
-                    {
-                        // Users that are not following the user's followers
-                        id: {
-                            in: Array.from(unfollowed)
-                        }
-                    }
-                ]
+                // Users that my friends are following
+                id: {
+                    in: Array.from(friendsOfFriends)
+                }
             }
         });
 
@@ -243,10 +248,8 @@ export class UserRepository {
             const more = await db.user.findMany({
                 take: remaining,
                 where: {
-                    NOT: {
-                        id: {
-                            in: [userId, ...target.map(t => t.id)]
-                        }
+                    id: {
+                        in: Array.from(unfollowed)
                     }
                 }
             });

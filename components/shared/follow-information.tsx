@@ -19,13 +19,13 @@ export function FollowInformation({
         <div {...props}>
             <div>
                 <span className="text-main-primary font-bold">
-                    {followers.size}
+                    {following.size}
                 </span>{" "}
                 seguidores
             </div>
             <div>
                 <span className="text-main-primary font-bold">
-                    {following.size}
+                    {followers.size}
                 </span>{" "}
                 seguindo
             </div>

@@ -15,7 +15,7 @@ export async function Users({
         console.log(query)
     const userRepo = new UserRepository({ clerkId: clerk.id });
     const [interestingUsers, followers] = await Promise.all([
-        query ? UserRepository.queryUsers({ max: MAX, query }) : userRepo.getSuggestedUsers({ max: MAX }),
+        query ? UserRepository.getUsers({ max: MAX, query }) : userRepo.getSuggestedUsers({ max: MAX }),
         userRepo.getFollowers()
     ]);
 
