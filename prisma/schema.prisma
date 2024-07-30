@@ -23,10 +23,10 @@ model User {
 }
 
 model Follow {
-  user   User   @relation("Follower", fields: [userId], references: [id])
+  user   User   @relation("Follower", fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
-  following   User   @relation("Following", fields: [followingId], references: [id])
+  following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
   followingId String
 
   @@unique([userId, followingId])
@@ -40,5 +40,5 @@ model Post {
   likes     Int      @default(0)
 
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

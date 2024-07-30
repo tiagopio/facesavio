@@ -23,7 +23,7 @@ import { useUploadThing } from '@/lib/uploadthing'
 import { onboard } from "./action";
 import { toast } from "sonner";
 import { redirect, useRouter } from "next/navigation";
-import { Loader, Send } from "lucide-react";
+import { ArrowRight, Loader, Send } from "lucide-react";
 import { Toaster } from "../ui/sonner";
 import { useUser } from "@clerk/nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -40,7 +40,7 @@ interface Props {
   btnTitle: string;
 }
 
-const AccountProfile = ({ user, btnTitle }: Props) => {
+const AccountProfile = ({ user, btnTitle = "Enviar" }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing("media");
   const [loading, setLoading] = useState(false);
@@ -203,9 +203,9 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
         <Button type="submit" className="flex gap-2 w-min mx-auto" disabled={loading}>
           {loading
             ? <Loader className="animate-spin" />
-            : <Send />
+            : <ArrowRight />
           }
-          Enviar
+          {btnTitle}
         </Button>
       </form>
     </Form>
