@@ -18,6 +18,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   posts     Post[]
+  likes     Like[]   @relation("UserLikes")
   followers Follow[] @relation("Following")
   following Follow[] @relation("Follower")
 }
@@ -37,8 +38,18 @@ model Post {
   createdAt DateTime @default(now())
   title     String
   body      String?
-  likes     Int      @default(0)
 
   userId String
+  likes  Like[] @relation("PostLikes")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Like {
+  userId String
+  postId String
+  user   User   @relation("UserLikes", fields: [userId], references: [id])
+  post   Post   @relation("PostLikes", fields: [postId], references: [id])
+
+  @@id([userId, postId])
+  @@index([postId])
 }
