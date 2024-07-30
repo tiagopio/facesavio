@@ -52,7 +52,7 @@ function LeftSidebar() {
                     height={16}
                   />
 
-                  <p className="text-[inherit] font-medium text-sm max-lg:hidden">Logout</p>
+                  <p className="text-[inherit] font-medium text-sm max-lg:hidden">Sair</p>
                 </div>
               </SignOutButton>
             </SignedIn>

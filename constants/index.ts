@@ -4,26 +4,26 @@ export const sidebarLinks = [
   {
     icon: MessageSquare,
     route: "/",
-    label: "Home",
+    label: "Página Inicial",
   },
   {
     icon: Search,
     route: "/search",
-    label: "Search",
+    label: "Explorar",
   },
   {
     icon: Heart,
     route: "/activity",
-    label: "Activity",
+    label: "Notificações",
   },
   {
     icon: Plus,
     route: "/?create-post=true",
-    label: "New Post",
+    label: "Novo Post",
   },
   {
     icon: UserRound,
     route: "/profile",
-    label: "Profile",
+    label: "Perfil",
   },
 ];
