@@ -30,7 +30,7 @@ model Follow {
   following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
   followingId String
 
-  @@unique([userId, followingId])
+  @@id([userId, followingId])
 }
 
 model Post {

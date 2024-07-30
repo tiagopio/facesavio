@@ -15,8 +15,8 @@ function LeftSidebar() {
   const { isSignedIn, user } = useUser();
 
   return (
-    <section className="custom-scrollbar leftsidebar">
-      <div className="flex flex-col pl-8 lg:min-w-[300px] w-min">
+    <section className="custom-scrollbar leftsidebar flex-cold items-center pl-10 md:flex hidden">
+      <div className="flex flex-col lg:min-w-[300px] w-min">
         {sidebarLinks.map((link, idx) => {
           const isActive = (pathname.includes(link.route) && link.route.length > 1) || pathname === link.route;
           const isFirst = idx === 0;
@@ -41,7 +41,7 @@ function LeftSidebar() {
           )})}
       </div>
 
-      <div className="mt-10 px-6">
+      <div className="mt-10 lg:min-w-[300px]">
         <SignedIn>
               <SignOutButton>
                 <div className="flex cursor-pointer gap-2 p-5 bg-white items-center border rounded-xl hover:bg-slate-50">
