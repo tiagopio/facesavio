@@ -1,4 +1,4 @@
-import { Post, User } from "@prisma/client";
+import { Like, Post, User } from "@prisma/client";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { ThumbsUp } from "lucide-react";
 import { Button } from "../ui/button";
@@ -22,7 +22,7 @@ export function PostCard({
         imageUrl
     },
     ...props
-}: Post & { user: User } & ComponentProps<"div">) {
+}: Post & { user: User, likes: Array<Like> } & ComponentProps<"div">) {
 
     return (
         <Card {...props}>
@@ -40,7 +40,7 @@ export function PostCard({
                     <Button variant="ghost" size="icon-sm">
                         <ThumbsUp />
                     </Button>
-                    {likes} Likes
+                    {likes.length} Likes
                 </div>
                 <div className="flex gap-3 items-center">
                     <span className="text-neutral-600">@{username}</span>

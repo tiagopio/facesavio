@@ -2,7 +2,7 @@ import "server-only"
 
 import { db } from "@/lib/db";
 import { RequireAtLeastOne } from "@/types/util";
-import { Post, User } from "@prisma/client";
+import { Like, Post, User } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 
 type UserProps = RequireAtLeastOne<{ username: string, clerkId: string, id: string }>
@@ -138,10 +138,11 @@ export class UserRepository {
      * @returns Array<Post>
      * @throws Error if user is not found
     */
-    public getUserPosts = async (): Promise<Array<Post>> => {
+    public getUserPosts = async (): Promise<Array<Post & { likes: Array<Like> }>> => {
         const userId = await this.getId();
         return await db.post.findMany({
             where: { userId },
+            include: { likes: true },
             orderBy: { createdAt: "desc" }
         });
     }
@@ -177,10 +178,11 @@ export class UserRepository {
      * Returns an array of suggested posts
      * @returns Array<Post>
     */
-    public getSuggestedPosts = async (): Promise<Array<Post & { user: User }>> => {
+    public getSuggestedPosts = async (): Promise<Array<Post & { user: User, likes: Array<Like> }>> => {
         return await db.post.findMany({
             include: {
-                user: true
+                user: true,
+                likes: true
             },
             orderBy: {
                 createdAt: "desc"

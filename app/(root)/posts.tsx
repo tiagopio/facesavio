@@ -14,7 +14,12 @@ export async function Posts() {
     return (
         <>
             {posts.map((p, idx) => {
-                return <PostCard key={p.id} {...p} data-last={idx === posts.length - 1} className="data-[last=true]:rounded-b-xl rounded-none border-t-0" />
+                return <PostCard 
+                    key={p.id} 
+                    {...p} 
+                    data-last={idx === posts.length - 1} 
+                    className="data-[last=true]:rounded-b-xl rounded-none border-t-0"
+                />
             })}
         </>
     )
