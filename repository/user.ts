@@ -9,6 +9,7 @@ type UserProps = RequireAtLeastOne<{ username: string, clerkId: string, id: stri
 type QueryUser = RequireAtLeastOne<{ set: Set<string> | Array<string>, query: string }> & { max?: number }
 type Identifier = { value: string, tag: keyof UserProps }
 
+const cache = false;
 export class UserRepository {
     private identifier: Identifier = {} as Identifier;
     private userId: undefined | string;
@@ -171,7 +172,7 @@ export class UserRepository {
             });
         },
         [`query-users-${query}`],
-        { revalidate: 60 } // 60 seconds
+        { revalidate: cache ? 60 : 0 } // 60 seconds
     )({ max, query });
 
     /**
@@ -271,7 +272,7 @@ export class UserRepository {
     */
     public getSuggestedUsers = unstable_cache(
         this.getSuggestedUsersAlgorithm,
-        [`suggested-users-algorith-${this.identifier.value}`],
-        { revalidate: 60 } // 60 seconds
+        [`suggested-users-algorithm-${this.identifier.value}`],
+        { revalidate: cache ? 60 : 0 } // 60 seconds
     );
 }
