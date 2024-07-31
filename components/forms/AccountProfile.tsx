@@ -96,7 +96,7 @@ const AccountProfile = ({ user, btnTitle = "Enviar" }: Props) => {
     }
 
     const { message, error } = await onboard(values);
-    console.log(await clerkUser?.reload());
+    await clerkUser?.reload();
     if (error) {
       toast.error(message);
       setLoading(false);

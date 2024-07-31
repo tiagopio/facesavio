@@ -11,8 +11,6 @@ export async function Users({
     const clerk = await currentUser();
     if (!clerk) return null;
 
-    if (query)
-        console.log(query)
     const userRepo = new UserRepository({ clerkId: clerk.id });
     const [thisUser, interestingUsers, thisUserIsFollowing] = await Promise.all([
         userRepo.getUser(),

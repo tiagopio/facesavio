@@ -28,7 +28,6 @@ export function FollowButton({
     },
     ...props
 }: Props) {
-    console.log(isFollowing);
     const [following, setFollowing] = useState(isFollowing);
     const [unfollowConfirmation, setUnfollowConfirmation] = useState(false);
     const [loading, setLoading] = useState(false);
