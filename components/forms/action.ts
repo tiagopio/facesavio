@@ -8,7 +8,7 @@ import { ActionResponse } from "@/types"
 
 type User = z.infer<typeof UserValidation>
 export async function onboard(user: User): Promise<ActionResponse> {
-    const { success, error, data } = UserValidation.safeParse(user);
+    const { success, data } = UserValidation.safeParse(user);
     const u = await currentUser();
     if (!u) {
         return {
@@ -58,7 +58,10 @@ export async function onboard(user: User): Promise<ActionResponse> {
             publicMetadata: {
                 onboardingComplete: true,
                 id
-            }
+            },
+            username,
+            firstName: name.split(" ")[0],
+            lastName: name.split(" ")[1]
         });
     }
     catch (e) {
