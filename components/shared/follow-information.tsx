@@ -4,13 +4,13 @@ import { notFound } from "next/navigation";
 import { ComponentProps } from "react";
 
 type Props = {
-    followers: Set<string>;
     following: Set<string>;
+    followedBy: Set<string>;
 } & ComponentProps<"div">;
 
 export function FollowInformation({
-    followers,
     following,
+    followedBy,
     ...props
 }: Props) {
     
@@ -19,13 +19,13 @@ export function FollowInformation({
         <div {...props}>
             <div>
                 <span className="text-main-primary font-bold">
-                    {following.size}
+                    {followedBy.size}
                 </span>{" "}
                 seguidores
             </div>
             <div>
                 <span className="text-main-primary font-bold">
-                    {followers.size}
+                    {following.size}
                 </span>{" "}
                 seguindo
             </div>

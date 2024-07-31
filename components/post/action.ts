@@ -6,23 +6,32 @@ import { currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { UserRepository } from "@/repository/user";
 
+const badRequest = {
+    error: true,
+    message: "Bad request"
+}
+
+const successRequest = {
+    error: false,
+    message: "Success"
+}
+
+const internalError = {
+    error: true,
+    message: "Internal error"
+}
 export async function post(values: PostCreateSchema): Promise<ActionResponse> {
     const clerk = await currentUser();
     const { success, data } = postCreateSchema.safeParse(values)
     
-    const badRequest = {
-        error: true,
-        message: "Bad request"
-    }
-
     if (!success || !clerk)
         return badRequest
 
+    const { message, title } = data;
     const userRepo = new UserRepository({ clerkId: clerk.id });
     const user = await userRepo.getUser();
     if (!user) return badRequest
 
-    const { message, title } = data;
     try {
         await db.post.create({
             data: {
@@ -32,16 +41,62 @@ export async function post(values: PostCreateSchema): Promise<ActionResponse> {
             }
         })
         
-        return {
-            error: false,
-            message: "Success"
-        }
+        return successRequest
     }
     catch (err) {
         console.error(err)
-        return {
-            error: true,
-            message: "Erro interno"
-        }
+        return internalError
+    }
+}
+
+export async function like({ postId }: { postId: string }): Promise<ActionResponse> {
+    const clerk = await currentUser();
+    if (!clerk)
+        return badRequest
+
+    const userRepo = new UserRepository({ clerkId: clerk.id });
+    const user = await userRepo.getUser();
+    if (!user)
+        return badRequest
+
+    try {
+        await db.like.create({
+            data: {
+                userId: user.id,
+                postId
+            }
+        })
+
+        return successRequest
+    }
+    catch (err) {
+        console.error(err)
+        return internalError
+    }
+}
+
+export async function unlike({ postId }: { postId: string }): Promise<ActionResponse> {
+    const clerk = await currentUser();
+    if (!clerk)
+        return badRequest
+
+    const userRepo = new UserRepository({ clerkId: clerk.id });
+    const user = await userRepo.getUser();
+    if (!user)
+        return badRequest
+
+    try {
+        await db.like.deleteMany({
+            where: {
+                userId: user.id,
+                postId
+            }
+        })
+
+        return successRequest
+    }
+    catch (err) {
+        console.error(err)
+        return internalError
     }
 }

@@ -14,23 +14,27 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { Suspense } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { FollowInformation } from "./follow-information";
+import { FollowButton } from "../user/follow-button";
 
 type Props = {
-  clerkId: string;
+  thisUser: {
+    clerkId: string;
+    userId: string;
+    username: string;
+  };
   type?: string;
   visitedProfile: User;
-  followers: Set<string>;
   following: Set<string>;
+  followedBy: Set<string>;
 };
 
 function ProfileHeader({
-  clerkId,
+  thisUser,
   visitedProfile,
   type,
-  followers,
   following,
+  followedBy
 }: Props) {
-
   return (
     <Card>
       <CardHeader>
@@ -39,7 +43,8 @@ function ProfileHeader({
             <UserRound />
             Dados do usuário
           </div>
-          {clerkId === visitedProfile.clerkId && type !== "Community" && (
+          {thisUser.clerkId === visitedProfile.clerkId && type !== "Community"
+          ? (
           <Tooltip>
             <TooltipTrigger asChild>
               <Button variant="outline" size={"icon-sm"} asChild>
@@ -50,7 +55,12 @@ function ProfileHeader({
             </TooltipTrigger>
             <TooltipContent>Configurações</TooltipContent>
           </Tooltip>
-          )}
+          )
+          : <FollowButton username={{
+            thisUser: thisUser.username,
+            toFollow: visitedProfile.username
+          }} isFollowing={followedBy.has(thisUser.userId)} size={"icon-sm"} />
+          }
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-7">
@@ -81,7 +91,7 @@ function ProfileHeader({
             </Button>
           )} */}
           <FollowInformation 
-            followers={followers}
+            followedBy={followedBy}
             following={following}
             className="flex flex-row md:flex-col gap-5 md:gap-1 justify-end text-sm text-neutral-700 text-end"
           />

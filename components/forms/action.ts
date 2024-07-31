@@ -37,7 +37,7 @@ export async function onboard(user: User): Promise<ActionResponse> {
             }
         }
 
-        await db.user.upsert({
+        const { id } = await db.user.upsert({
             where: { clerkId: u.id },
             create: {
                 clerkId: u.id,
@@ -57,7 +57,7 @@ export async function onboard(user: User): Promise<ActionResponse> {
         await clerkClient().users.updateUser(u.id, {
             publicMetadata: {
                 onboardingComplete: true,
-                id: u.id
+                id
             }
         });
     }

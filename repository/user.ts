@@ -103,7 +103,7 @@ export class UserRepository {
      * Returns a set of id's of users that the user is following
      * @returns Set<string>
     */
-    public getFollowers = async (): Promise<Set<string>> => {
+    public getFollowing = async (): Promise<Set<string>> => {
         const userId = await this.getId();
         const followers = await db.follow.findMany({
             where: { userId }
@@ -120,7 +120,7 @@ export class UserRepository {
      * Returns a set of id's of users that are following the user
      * @returns Set<string>
     */
-    public getFollowing = async (): Promise<Set<string>> => {
+    public getFollowedBy = async (): Promise<Set<string>> => {
         const userId = await this.getId();
         const following = await db.follow.findMany({
             where: { followingId: userId }
@@ -172,7 +172,7 @@ export class UserRepository {
             });
         },
         [`query-users-${query}`],
-        { revalidate: cache ? 60 : 0 } // 60 seconds
+        { revalidate: cache && 60 } // 60 seconds
     )({ max, query });
 
     /**
@@ -200,19 +200,23 @@ export class UserRepository {
         max = 10
     }): Promise<Array<User>> => {
         console.log("Fetching suggested users")
-        const following = await this.getFollowing();
-        const followers = await this.getFollowers();
+        const following = await this.getFollowing(); // Users that the user is following
+        const followedBy = await this.getFollowedBy(); // Users that are following the user
         const userId = await this.getId();
 
+        console.log("Following", following, userId)
+        console.log("FollowedBy", followedBy, userId)
+
         const isFollowing = (id: string) => following.has(id);
-        const isFollower = (id: string) => followers.has(id);
 
         // Followers that the user is not following
         const unfollowed = new Set<string>();
-        followers.forEach(f => {
+        followedBy.forEach(f => {
             if (!isFollowing(f))
                 unfollowed.add(f);
         })
+
+        console.log("Unfollowed", unfollowed, userId)
 
         // Friends of friends
         const friendsOfFriendsQuery = await db.follow.findMany({
@@ -230,11 +234,15 @@ export class UserRepository {
             }
         });
 
+        console.log("Relevance map", relevanceMap, userId)
+
         const friendsOfFriends = new Set<string>();
         const sorted = Array.from(relevanceMap.entries()).sort((a, b) => b[1] - a[1]);
         sorted.forEach(f => {
             friendsOfFriends.add(f[0]);
         });
+
+        console.log("Friends of friends", friendsOfFriends, userId)
 
         const target = await db.user.findMany({
             take: max,
@@ -257,6 +265,8 @@ export class UserRepository {
                 }
             });
 
+            console.log("More", more, userId)
+
             target.push(...more);
         }
 
@@ -273,6 +283,33 @@ export class UserRepository {
     public getSuggestedUsers = unstable_cache(
         this.getSuggestedUsersAlgorithm,
         [`suggested-users-algorithm-${this.identifier.value}`],
-        { revalidate: cache ? 60 : 0 } // 60 seconds
+        { revalidate: cache && 60 } // 60 seconds
     );
+
+    /**
+     * Returns an array of likes that the user received on their posts in descending order
+     * @returns Array<Like>
+     * @throws Error if user is not
+     */
+    public getLikes = async ({ max = 10 }): Promise<Array<Like & { user: User, post: Post }>> => {
+        const userPosts = await this.getUserPosts();
+
+        const postIds = userPosts.map(p => p.id);
+        return await db.like.findMany({
+            take: max,
+            where: {
+                postId: {
+                    in: postIds
+                }
+            },
+            orderBy: {
+                createdAt: "desc"
+            },
+            include: {
+                user: true,
+                post: true
+            }
+        });
+    }
+
 }

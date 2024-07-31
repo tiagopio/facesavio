@@ -9,9 +9,12 @@ import { ptBR } from "date-fns/locale";
 import { ComponentProps } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { initials } from "@/lib/utils";
+import { LikeButton } from "./like-button";
 
 export function PostCard({
+    id,
     title,
+    thisUser,
     body,
     likes,
     createdAt,
@@ -22,8 +25,11 @@ export function PostCard({
         imageUrl
     },
     ...props
-}: Post & { user: User, likes: Array<Like> } & ComponentProps<"div">) {
-
+}: Post & { user: User, likes: Array<Like> } & ComponentProps<"div"> & {
+    thisUser: {
+        id: string
+    }
+}) {
     return (
         <Card {...props}>
             <CardHeader className="flex-row justify-between items-center">
@@ -36,6 +42,11 @@ export function PostCard({
                 {body}
             </CardContent>
             <CardFooter className="flex gap-2 py-3 border-t justify-between text-sm">
+                <LikeButton 
+                    postId={id} 
+                    likeCount={likes.length} 
+                    isLiked={likes.some(like => like.userId === thisUser.id)}
+                />
                 <div className="flex gap-2 rounded items-center text-neutral-600">
                     <Button variant="ghost" size="icon-sm">
                         <ThumbsUp />

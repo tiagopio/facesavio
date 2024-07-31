@@ -6,7 +6,8 @@ import { notFound } from "next/navigation";
 
 export async function Posts() {
     const clerk = await currentUser();
-    if (!clerk) return notFound();
+    const thisUserId = clerk?.publicMetadata.id;
+    if (!clerk || !thisUserId) return notFound();
 
     const userRepo = new UserRepository({ clerkId: clerk.id });
     const posts = await userRepo.getSuggestedPosts();
@@ -16,7 +17,10 @@ export async function Posts() {
             {posts.map((p, idx) => {
                 return <PostCard 
                     key={p.id} 
-                    {...p} 
+                    {...p}
+                    thisUser={{
+                        id: thisUserId
+                    }}
                     data-last={idx === posts.length - 1} 
                     className="data-[last=true]:rounded-b-xl rounded-none border-t-0"
                 />

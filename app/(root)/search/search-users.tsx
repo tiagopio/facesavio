@@ -16,7 +16,7 @@ export default function SearchPeople() {
     useEffect(() => {
         const search = new URLSearchParams(searchParams);
         if (queryDebounced)
-            search.set("query", queryDebounced);
+            search.set("query", queryDebounced.trim());
         else
             search.delete("query");
 

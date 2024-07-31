@@ -46,9 +46,13 @@ model Post {
 
 model Like {
   userId String
-  postId String
   user   User   @relation("UserLikes", fields: [userId], references: [id])
+  
+  postId String
   post   Post   @relation("PostLikes", fields: [postId], references: [id])
+  
+  viewed Boolean @default(false)
+  createdAt DateTime @default(now())
 
   @@id([userId, postId])
   @@index([postId])

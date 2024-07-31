@@ -14,15 +14,26 @@ export async function Users({
     if (query)
         console.log(query)
     const userRepo = new UserRepository({ clerkId: clerk.id });
-    const [interestingUsers, followers] = await Promise.all([
+    const [thisUser, interestingUsers, thisUserIsFollowing] = await Promise.all([
+        userRepo.getUser(),
         query ? UserRepository.getUsers({ max: MAX, query }) : userRepo.getSuggestedUsers({ max: MAX }),
-        userRepo.getFollowers()
+        userRepo.getFollowing()
     ]);
 
     return (
         <>
             {interestingUsers.map((user) => (
-                <UserCard key={user.id} {...user} isFollowing={followers.has(user.id)} />
+                <UserCard
+                    username={{
+                        thisUser: thisUser!.username,
+                        toFollow: user.username
+                    }}
+                    key={`user-card-${user.id}`}
+                    imageUrl={user.imageUrl}
+                    name={user.name}
+                    bio={user.bio}
+                    isFollowing={thisUserIsFollowing.has(user.id)} 
+                />
             ))}
         </>
     )
