@@ -271,7 +271,7 @@ export class UserRepository {
     */
     public getSuggestedUsers = unstable_cache(
         this.getSuggestedUsersAlgorithm,
-        [`suggested-users-${this.identifier.value}`],
+        [`suggested-users-algorith-${this.identifier.value}`],
         { revalidate: 60 } // 60 seconds
     );
 }
