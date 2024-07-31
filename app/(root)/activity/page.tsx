@@ -16,8 +16,8 @@ export default async function Page() {
     const likes = await userRepo.getLikes({ max: 10 });
     const hasLikes = likes.length > 0;
     return (
-        <section className="flex flex-col">
-            <Card className="rounded-b-none">
+        <section data-empty={!hasLikes} className="flex flex-col data-[empty=false]:gap-5">
+            <Card data-empty={!hasLikes} className="data-[empty=true]:rounded-b-none">
                 <CardHeader>
                     <CardTitle>
                         <Heart />
@@ -35,7 +35,7 @@ export default async function Page() {
                         <CardHeader>
                             <CardTitle>
                                 <Link href={`/profile/${like.user.username}`}>
-                                    <Avatar>
+                                    <Avatar className="w-5 h-5">
                                         <AvatarImage src={like.user.imageUrl ?? ""} alt={like.user.username} />
                                         <AvatarFallback>{initials(like.user.name || like.user.username)}</AvatarFallback>
                                     </Avatar>
@@ -43,7 +43,7 @@ export default async function Page() {
                                 <span>
                                     {like.user.username} curtiu sua publicação
                                 </span>
-                                <Heart className="w-3 h-3 text-red-500" />
+                                <Heart className="!w-3 !h-3 fill-red-500 text-red-500" />
                             </CardTitle>
                             <CardDescription>
                                 {like.post.title}

@@ -47,12 +47,6 @@ export function PostCard({
                     likeCount={likes.length} 
                     isLiked={likes.some(like => like.userId === thisUser.id)}
                 />
-                <div className="flex gap-2 rounded items-center text-neutral-600">
-                    <Button variant="ghost" size="icon-sm">
-                        <ThumbsUp />
-                    </Button>
-                    {likes.length} Likes
-                </div>
                 <div className="flex gap-3 items-center">
                     <span className="text-neutral-600">@{username}</span>
                     <Link href={`/profile/${username}`}>
