@@ -5,6 +5,7 @@ import { PostCreateSchema, postCreateSchema } from "./schema";
 import { currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { UserRepository } from "@/repository/user";
+import { revalidatePath } from "next/cache";
 
 const badRequest = {
     error: true,
@@ -41,6 +42,8 @@ export async function post(values: PostCreateSchema): Promise<ActionResponse> {
             }
         })
         
+        revalidatePath("/")
+        revalidatePath("/profile")
         return successRequest
     }
     catch (err) {

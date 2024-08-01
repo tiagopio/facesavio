@@ -7,6 +7,7 @@ import { clerkClient, currentUser } from "@clerk/nextjs/server"
 import { ActionResponse } from "@/types"
 import { isBase64Image } from "@/lib/utils"
 import { notFound } from "next/navigation"
+import { revalidatePath } from "next/cache"
 
 type User = z.infer<typeof UserValidation>
 export async function onboard(user: User): Promise<ActionResponse> {
@@ -75,6 +76,8 @@ export async function onboard(user: User): Promise<ActionResponse> {
             firstName: name.split(" ")[0],
             lastName: name.split(" ")[1]
         });
+
+        revalidatePath("/", "layout")
     }
     catch (e) {
         return {

@@ -311,13 +311,17 @@ export class UserRepository {
      */
     public getLikes = async ({ max = 10 }): Promise<Array<Like & { user: User, post: Post }>> => {
         const userPosts = await this.getUserPosts();
+        const userId = await this.getId();
 
         const postIds = userPosts.map(p => p.id);
         return await db.like.findMany({
             take: max,
             where: {
                 postId: {
-                    in: postIds
+                    in: postIds,
+                },
+                userId: {
+                    not: userId
                 }
             },
             orderBy: {
