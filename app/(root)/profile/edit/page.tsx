@@ -46,7 +46,7 @@ export default async function Page() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <AccountProfile user={userData} btnTitle='Continue' />
+          <AccountProfile user={userData} btnTitle='Editar' />
         </CardContent>
       </Card>
     </>

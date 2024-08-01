@@ -12,13 +12,8 @@ export default function AuthLayout({
   children 
 }: { children: React.ReactNode 
 }) {
-  if (auth().sessionClaims?.metadata.onboardingComplete === true) {
-    redirect("/");
-  }
-  
   return (
     <main className="w-screen min-h-screen flex items-center flex-col gap-10 justify-center bg-gray-1">
-      <Image src="/assets/facesavio.png" width={200} height={200} alt="facesavio-logo" />
       <ClerkProvider>
         {children}
       </ClerkProvider>

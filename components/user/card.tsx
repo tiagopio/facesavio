@@ -3,26 +3,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { FollowButton } from "./follow-button";
+import { ComponentProps } from "react";
+import { cn } from "@/lib/utils";
 
 export function UserCard({
     username,
     imageUrl,
-    bio,
+    className,
     name,
-    isFollowing
+    isFollowing,
+    ...props
 }: {
     isFollowing: boolean;
     username: {
         thisUser: string;
         toFollow: string;
     }
-} & Pick<User, "imageUrl" | "bio" | "name">) {
+} & Pick<User, "imageUrl" | "bio" | "name"> & ComponentProps<"div">) {
 
     return (
         <Link href={`/profile/${username.toFollow}`}>
-            <div className="rounded-lg flex flex-row h-[80px] bg-white justify-between border hover:border-neutral-300 transition-colors">
+            <div className={cn("rounded-lg flex flex-row h-[80px] bg-white justify-between border hover:border-neutral-300 transition-colors", className)} {...props}>
                 <div className="w-auto h-full aspect-square p-3">
-                    {imageUrl && <Image src={imageUrl} alt={username.toFollow} width={100} height={100} className="rounded-lg" />}
+                    {imageUrl && <Image src={imageUrl} alt={username.toFollow} width={100} height={100} className="rounded-lg object-cover aspect-square" />}
                 </div>
                 <div className="w-full flex p-3 flex-col gap-0 items-start justify-center">
                     <Tooltip>
