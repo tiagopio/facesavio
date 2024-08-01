@@ -200,6 +200,8 @@ export class UserRepository {
         max = 10
     }): Promise<Array<User>> => {
         console.log("Fetching suggested users")
+
+        let needed = max;
         const following = await this.getFollowing(); // Users that the user is following
         const followedBy = await this.getFollowedBy(); // Users that are following the user
         const userId = await this.getId();
@@ -245,7 +247,7 @@ export class UserRepository {
         console.log("Friends of friends", friendsOfFriends, userId)
 
         const target = await db.user.findMany({
-            take: max,
+            take: needed,
             where: {
                 // Users that my friends are following
                 id: {
@@ -254,10 +256,10 @@ export class UserRepository {
             }
         });
 
-        if (target.length < max) {
-            const remaining = max - target.length;
+        needed -= target.length;
+        if (needed > 0) {
             const more = await db.user.findMany({
-                take: remaining,
+                take: needed,
                 where: {
                     id: {
                         in: Array.from(unfollowed)
@@ -266,10 +268,26 @@ export class UserRepository {
             });
 
             console.log("More", more, userId)
-
             target.push(...more);
+            needed -= more.length;
         }
 
+        if (needed > 0) {
+            const more = await db.user.findMany({
+                take: needed,
+                where: {
+                    NOT: {
+                        id: {
+                            in: [...target.map(t => t.id), userId]
+                        }
+                    }
+                }
+            });
+
+            console.log("More", more, userId)
+            target.push(...more);
+            needed -= more.length;
+        }
 
         return target;
     }
@@ -293,13 +311,17 @@ export class UserRepository {
      */
     public getLikes = async ({ max = 10 }): Promise<Array<Like & { user: User, post: Post }>> => {
         const userPosts = await this.getUserPosts();
+        const userId = await this.getId();
 
         const postIds = userPosts.map(p => p.id);
         return await db.like.findMany({
             take: max,
             where: {
                 postId: {
-                    in: postIds
+                    in: postIds,
+                },
+                userId: {
+                    not: userId
                 }
             },
             orderBy: {

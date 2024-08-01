@@ -22,20 +22,20 @@ function NotFound() {
           O usuário que você está tentando acessar não existe.
         </CardDescription>
       </CardHeader>
-        <CardContent className="flex gap-2">
-          <Button asChild>
-            <Link href="/">
-              <MessageSquare />
-              Início
-            </Link>
-          </Button>
-          <Button variant="outline" asChild>
-            <Link href="/search">
-              <ArrowLeft />
-              Buscar usuários
-            </Link>
-          </Button>
-        </CardContent>
+      <CardContent className="flex gap-2">
+        <Button asChild>
+          <Link href="/">
+            <MessageSquare />
+            Início
+          </Link>
+        </Button>
+        <Button variant="outline" asChild>
+          <Link href="/search">
+            <ArrowLeft />
+            Buscar usuários
+          </Link>
+        </Button>
+      </CardContent>
     </Card>
   );
 }
@@ -51,12 +51,18 @@ export default async function Page({ params: { username } }: { params: { usernam
 
   let hasIssue = false;
   const profileRepo = new UserRepository({ username });
-  const [thisProfile, thisProfilePosts, thisProfileIsFollowing, thisProfileIsFollowedBy] = await Promise.all([
-    profileRepo.getUser(), 
-    profileRepo.getUserPosts(), 
-    profileRepo.getFollowing(), 
+  const [
+    thisProfile,
+    thisProfilePosts,
+    thisProfileIsFollowing,
+    thisProfileIsFollowedBy
+  ] = await Promise.all([
+    profileRepo.getUser(),
+    profileRepo.getUserPosts(),
+    profileRepo.getFollowing(),
     profileRepo.getFollowedBy()
-  ]).catch(() => {
+  ])
+  .catch(() => {
     hasIssue = true
     return []
   });
@@ -89,15 +95,15 @@ export default async function Page({ params: { username } }: { params: { usernam
         </Card>
         {hasPosts
           ? thisProfilePosts.map((p, idx) => {
-            return <PostCard 
-              key={p.id} 
-              {...p} 
-              user={thisProfile} 
+            return <PostCard
+              key={p.id}
+              {...p}
+              user={thisProfile}
               thisUser={{
                 id: thisUser.id
               }}
-              data-last={idx === thisProfilePosts.length - 1} 
-              className="data-[last=true]:rounded-b-xl rounded-none border-t-0" 
+              data-last={idx === thisProfilePosts.length - 1}
+              className="data-[last=true]:rounded-b-xl rounded-none border-t-0"
             />
           })
           : <EmptyStateCard message="Este usuário ainda não fez nenhuma postagem." />

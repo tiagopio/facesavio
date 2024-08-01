@@ -1,3 +1,4 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import { UserRepository } from "@/repository/user";
 import { currentUser } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
@@ -11,4 +12,6 @@ export default async function Page() {
     if (!user) return notFound();
 
     redirect(`/profile/${user.username}`);
+
+    return <Skeleton className="h-[300px] w-full" />;
 }

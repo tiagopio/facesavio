@@ -12,8 +12,6 @@ function LeftSidebar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { isSignedIn, user } = useUser();
-
   return (
     <section className="leftsidebar custom-scrollbar pl-10">
       <div className="flex flex-col lg:min-w-[300px] w-min">
@@ -22,10 +20,7 @@ function LeftSidebar() {
           const isFirst = idx === 0;
           const isLast = idx === sidebarLinks.length - 1;
 
-          let href = link.route
-          if (link.route === "/profile" && user?.username)
-            href = `${link.route}/${user?.username}`
-
+          let href = link.route;
           const Icon = link.icon
           return (
             <Link

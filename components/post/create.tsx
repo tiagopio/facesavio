@@ -49,15 +49,15 @@ export function PostCreate({ className }: {
     }, [searchParams, form, router, pathname])
 
     async function onSubmit(values: PostCreateSchema) {
-        try {
-            await post(values)
-            form.reset()
-            router.refresh()
+        const { error, message } = await post(values);
+        form.reset()
+
+        if (error) {
+            toast.error(message)
+            return
         }
-        catch (err) {
-            console.error(err)
-            toast.error("Erro ao enviar post")
-        }
+
+        router.refresh()
     }
 
     return (
