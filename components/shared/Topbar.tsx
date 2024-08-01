@@ -2,8 +2,21 @@ import { OrganizationSwitcher, SignOutButton, SignedIn, UserButton } from "@cler
 import Image from "next/image";
 import Link from "next/link";
 import { dark } from "@clerk/themes";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { initials } from "@/lib/utils";
+import { currentUser } from "@clerk/nextjs/server";
+import { notFound } from "next/navigation";
+import { UserRepository } from "@/repository/user";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-function Topbar() {
+async function Topbar() {
+  const clerk = await currentUser();
+  if (!clerk) return notFound();
+
+  const userRepo = new UserRepository({ clerkId: clerk.id });
+  const user = await userRepo.getUser();
+  if (!user) return notFound();
+
   return (
     <nav className="topbar md:px-10 px-7">
       <Link href="/" className="flex items-center gap-2 py-3">
@@ -27,7 +40,17 @@ function Topbar() {
           </SignedIn>
         </div>
 
-        <UserButton />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link href={`/profile/${user.username}`}>
+              <Avatar className="w-7 h-7 border">
+                <AvatarImage src={user.imageUrl ?? ""} alt={user.name} />
+                <AvatarFallback>{initials(user.name || user.username)}</AvatarFallback>
+              </Avatar>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent>{user.name}</TooltipContent>
+        </Tooltip>
       </div>
     </nav>
   )

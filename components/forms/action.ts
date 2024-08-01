@@ -5,17 +5,15 @@ import { z } from "zod"
 import { db } from "@/lib/db"
 import { clerkClient, currentUser } from "@clerk/nextjs/server"
 import { ActionResponse } from "@/types"
+import { isBase64Image } from "@/lib/utils"
+import { notFound } from "next/navigation"
 
 type User = z.infer<typeof UserValidation>
 export async function onboard(user: User): Promise<ActionResponse> {
     const { success, data } = UserValidation.safeParse(user);
-    const u = await currentUser();
-    if (!u) {
-        return {
-            error: true,
-            message: "Usuário não encontrado"
-        }
-    }
+    const clerk = await currentUser();
+    if (!clerk)
+        return notFound();
 
     if (!success) {
         return {
@@ -25,12 +23,26 @@ export async function onboard(user: User): Promise<ActionResponse> {
     }
 
     const { profile_photo, name, username, bio } = data
+    const usernameLower = username.toLowerCase();
+    // const blob = profile_photo;
+    // if (blob) {
+    //   const hasImageChanged = isBase64Image(blob);
+  
+    //   if (hasImageChanged) {
+    //     const imgRes = await startUpload(files);
+  
+    //     if (imgRes && imgRes[0].url) {
+    //       values.profile_photo = imgRes[0].url;
+    //     }
+    //   }
+    // }
+
     try {
         const test = await db.user.findFirst({
-            where: { username }
+            where: { username: usernameLower }
         })
 
-        if (test && test.clerkId !== u.id) {
+        if (test && test.clerkId !== clerk.id) {
             return {
                 error: true,
                 message: "Nome de usuário já em uso"
@@ -38,28 +50,28 @@ export async function onboard(user: User): Promise<ActionResponse> {
         }
 
         const { id } = await db.user.upsert({
-            where: { clerkId: u.id },
+            where: { clerkId: clerk.id },
             create: {
-                clerkId: u.id,
+                clerkId: clerk.id,
                 imageUrl: profile_photo,
                 name,
-                username,
+                username: usernameLower,
                 bio
             },
             update: {
                 imageUrl: profile_photo,
                 name,
-                username,
+                username: usernameLower,
                 bio
             }
         })
 
-        await clerkClient().users.updateUser(u.id, {
+        await clerkClient().users.updateUser(clerk.id, {
             publicMetadata: {
                 onboardingComplete: true,
                 id
             },
-            username,
+            username: usernameLower,
             firstName: name.split(" ")[0],
             lastName: name.split(" ")[1]
         });
