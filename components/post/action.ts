@@ -97,7 +97,8 @@ export async function deletePost(postId: string): Promise<ActionResponse> {
         await db.post.delete({
             where: { id: postId }
         });
-
+        
+        revalidatePath("/", "page")
         return successRequest;
 
     } catch (err) {

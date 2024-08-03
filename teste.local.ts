@@ -11,4 +11,9 @@ const db = new PrismaClient();
     })
 
     console.log(user[0].user, user[0].following)
+    const { clerkId } = await db.user.findFirstOrThrow({
+        where: {
+            id: "123"
+        }
+    })
 })();
