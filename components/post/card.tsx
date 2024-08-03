@@ -1,15 +1,13 @@
-import { Like, Post, User } from "@prisma/client";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
-import { ThumbsUp } from "lucide-react";
-import { Button } from "../ui/button";
-import Image from "next/image";
-import Link from "next/link";
+// components/post/card.tsx
+import { Post, User, Like } from "@prisma/client";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { formatDistance } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ComponentProps } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { initials } from "@/lib/utils";
 import { LikeButton } from "./like-button";
+import { DeleteButton } from "./delete-button"; // Importar o DeleteButton
 
 export function PostCard({
     id,
@@ -26,9 +24,7 @@ export function PostCard({
     },
     ...props
 }: Post & { user: User, likes: Array<Like> } & ComponentProps<"div"> & {
-    thisUser: {
-        id: string
-    }
+    thisUser: { id: string }
 }) {
     return (
         <Card {...props}>
@@ -49,14 +45,17 @@ export function PostCard({
                 />
                 <div className="flex gap-3 items-center">
                     <span className="text-neutral-600">@{username}</span>
-                    <Link href={`/profile/${username}`}>
-                        <Avatar className="w-6 h-6 text-xs">
-                            <AvatarImage src={imageUrl ?? ""} alt={username} />
-                            <AvatarFallback>{initials(name || username)}</AvatarFallback>
-                        </Avatar>
-                    </Link>
+                    <Avatar className="w-6 h-6 text-xs">
+                        <AvatarImage src={imageUrl ?? ""} alt={username} />
+                        <AvatarFallback>{initials(name || username)}</AvatarFallback>
+                    </Avatar>
+                    {thisUser.id === userId && (
+                        <DeleteButton postId={id} />
+                        //Renderiza as postagens do usuário logado
+                        
+                    )}
                 </div>
             </CardFooter>
         </Card>
-    )
+    );
 }

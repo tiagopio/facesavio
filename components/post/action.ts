@@ -50,6 +50,7 @@ export async function post(values: PostCreateSchema): Promise<ActionResponse> {
         console.error(err)
         return internalError
     }
+
 }
 
 export async function like({ postId }: { postId: string }): Promise<ActionResponse> {
@@ -75,6 +76,33 @@ export async function like({ postId }: { postId: string }): Promise<ActionRespon
     catch (err) {
         console.error(err)
         return internalError
+    }
+}
+
+
+export async function deletePost(postId: string): Promise<ActionResponse> {
+    const clerk = await currentUser();
+    if (!clerk) {
+        return internalError;
+    }
+
+    const userRepo = new UserRepository({ clerkId: clerk.id });
+    const user = await userRepo.getUser();
+    if (!user) {
+        return internalError;
+    }
+
+    try {
+        // Remover o post do banco de dados
+        await db.post.delete({
+            where: { id: postId }
+        });
+
+        return successRequest;
+
+    } catch (err) {
+        console.error(err);
+        return internalError;
     }
 }
 

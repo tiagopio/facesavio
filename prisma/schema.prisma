@@ -16,19 +16,17 @@ model User {
   bio       String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  posts     Post[]
-  likes     Like[]   @relation("UserLikes")
   followers Follow[] @relation("Following")
   following Follow[] @relation("Follower")
+  likes     Like[]   @relation("UserLikes")
+  posts     Post[]
 }
 
 model Follow {
-  user   User   @relation("Follower", fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-
-  following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  userId      String
   followingId String
+  following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  user        User   @relation("Follower", fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, followingId])
 }
@@ -38,22 +36,24 @@ model Post {
   createdAt DateTime @default(now())
   title     String
   body      String?
-
-  userId String
-  likes  Like[] @relation("PostLikes")
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  likes     Like[]   @relation("PostLikes")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Like {
-  userId String
-  user   User   @relation("UserLikes", fields: [userId], references: [id], onDelete: Cascade)
-  
-  postId String
-  post   Post   @relation("PostLikes", fields: [postId], references: [id], onDelete: Cascade)
-  
-  viewed Boolean @default(false)
+  userId    String
+  postId    String
+  viewed    Boolean  @default(false)
   createdAt DateTime @default(now())
+  post      Post     @relation("PostLikes", fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation("UserLikes", fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, postId])
   @@index([postId])
+}
+
+model health_check {
+  id         Int       @id @default(autoincrement())
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
 }
