@@ -40,7 +40,6 @@ async function Topbar() {
           </SignedIn>
         </div>
 
-        <UserButton />
         <Tooltip>
           <TooltipTrigger asChild>
             <Link href={`/profile/${user.username}`}>
