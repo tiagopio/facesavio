@@ -88,7 +88,7 @@ Make sure you have the following installed on your machine:
 **Cloning the Repository**
 
 ```bash
-git clone https://github.com/caio-farias21/face-savio-next.git
+git clone https://github.com/tiagopio/facesavio.git
 cd face-savio-next
 ```
 
