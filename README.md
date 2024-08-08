@@ -90,7 +90,7 @@ Make sure you have the following installed on your machine:
 
 ```bash
 git clone https://github.com/tiagopio/facesavio.git
-cd face-savio-next
+cd facesavio
 ```
 
 **Installation**
@@ -107,6 +107,10 @@ Create a new file named `.env` in the root of your project and add the following
 
 ```env
 DATABASE_URL=
+```
+
+Create a new file named `.env.local` in the root of your project and add the following content:
+```env
 CLERK_SECRET_KEY=
 UPLOADTHING_SECRET=
 UPLOADTHING_APP_ID=
