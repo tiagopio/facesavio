@@ -15,6 +15,7 @@
   </div>
 
   <h3 align="center">"Your favorite social network's favorite social network."</h3>
+  <p>Fun fact: the name of the project refers to the social network Facebook, as our teacher's name was Savio, we had to make the joke!</p>
 
 </div>
 
