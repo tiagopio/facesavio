@@ -1,6 +1,6 @@
 <div align="center">
   <br />
-    <img src="https://raw.githubusercontent.com/caio-farias21/face-savio-next/main/public/assets/facesavioheader.png" alt="Project Banner">
+    <img src="https://raw.githubusercontent.com/tiagopio/facesavio/main/public/assets/facesavioheader.png" alt="Project Banner">
   <br />
 
   <div>
@@ -1082,7 +1082,7 @@ export function initials(name: string | undefined | null) {
 </details>
 
 <div align="center">
-  <a align="center" href="https://github.com/caio-farias21/face-savio-next/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=caio-farias21/face-savio-next" />
+  <a align="center" href="https://github.com/tiagopio/facesavio/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=tiagopio/facesavio" />
   </a>
 </div>
